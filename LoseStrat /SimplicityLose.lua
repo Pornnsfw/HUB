@@ -1,6 +1,4 @@
 TDS:RemoveIndex()
-TDS:Mode("Molten")
-TDS:GameInfo("Simplicity", {})
 
 TDS:Place("Assassin", -20.472789764404297, 22.99998474121094, -12.017228126525879)
 TDS:Ready()
