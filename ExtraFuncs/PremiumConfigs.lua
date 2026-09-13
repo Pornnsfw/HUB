@@ -174,7 +174,7 @@ return {
         SkillTree = {},
         Maps = {"Lay By"},
         Scripts = {
-            ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/Premium/refs/heads/main/Fallback/MoltenLayby.lua",
+            ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/MoltenLayby.lua",
         },
     },
     ["Fallen"] = {
@@ -184,7 +184,7 @@ return {
         SkillTree = {},
         Maps = {"Lay By"},
         Scripts = {
-            ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/Premium/refs/heads/main/Fallback/FallenLayby.lua",
+            ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
         },
     },
     ["Frost"] = {
