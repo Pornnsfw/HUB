@@ -1,5 +1,4 @@
 
-TDS:Loadout("Trapper", "Medic", "Mercenary Base", "Gatling Gun", "Tesla")
 TDS:Mode("Trial")
 
 TDS:Place("Trapper", -15.369919776916504, 0.9999645352363586, -2.8799638748168945)
