@@ -172,9 +172,10 @@ return {
         Towers = {"Gatling Gun", "Trapper", "Medic", "DJ Booth", "Mercenary Base"},
         Golden = {},
         SkillTree = {},
-        Maps = {"Lay By"},
+        Maps = {"Simplicity", "Lay By"},
         Scripts = {
-            ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/MoltenLayby.lua",
+            ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/SimplicityLose.lua",
+		    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/MoltenLayby.lua",
         },
     },
     ["Fallen"] = {
