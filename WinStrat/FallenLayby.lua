@@ -9,7 +9,6 @@ local Globals = getgenv()
 Globals.AutoGatling = true
 Globals.AutoRejoin = true
 Globals.AutoMercenary = true
-Globals.AutoBack = true
 
 -- [ Wave 1 ] --
 TDS:Upgrade(1)
