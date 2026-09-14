@@ -262,8 +262,8 @@ return {
             Win = {
                 Level = 175,
                 Mode = "hardcore",
-                Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
-                Golden = {},
+                Towers = {"Gatling Gun", "Pyromancer", "Medic", "Mercenary Base", "Hacker"},
+                Golden = {"Pyromancer"},
                 SkillTree = {},
                 Maps = {"Wretched Front"},
                 Scripts = {
