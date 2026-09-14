@@ -1,3 +1,7 @@
+local Globals = getgenv()
+Globals.AutoReady = true
+Globals.AutoSkip = true
+
 TDS:RemoveIndex()
 TDS:Ready()
 TDS:Place("Farm", -10.482913970947266, 21.5455634593963623, 26.13408088684082)
