@@ -1,4 +1,4 @@
-
+TDS:RemoveIndex()
 TDS:GameInfo("Wretched Front", {})
 
 TDS:Place("Farm", -10.861888885498047, 1.5471417903900146, 25.09894371032715)
