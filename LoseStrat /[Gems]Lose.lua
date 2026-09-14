@@ -1,5 +1,4 @@
 local Globals = getgenv()
-Globals.AutoReady = true
 Globals.AutoSkip = true
 
 TDS:RemoveIndex()
