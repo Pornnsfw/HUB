@@ -1,5 +1,4 @@
 
-TDS:Loadout("Ace Pilot", "DJ Booth", "Mercenary Base", "Medic", "Gatling Gun")
 TDS:Mode("Trial")
 
 TDS:Place("Ace Pilot", 19.152936935424805, 0.7499987483024597, 3.194467544555664)
