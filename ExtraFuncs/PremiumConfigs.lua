@@ -251,7 +251,7 @@ return {
             Lose = {
                 Level = 50,
                 Mode = "hardcore",
-                Towers = {"Farm", "Boomerang", "Crook Boss", "", ""},
+                Towers = {"Farm", "Boomerang", "Crook Boss"},
                 Golden = {},
                 SkillTree = {},
                 Maps = {"Wretched Front"},
