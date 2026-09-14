@@ -249,15 +249,14 @@ return {
         },
         Gems = {
             Lose = {
-                Level = 15,
+                Level = 50,
                 Mode = "hardcore",
-                Towers = {},
+                Towers = {"Farm", "Boomerang", "Crook Boss", "", "None"},
                 Golden = {},
                 SkillTree = {},
-                Maps = {"Lay By", "Simplicity"},
+                Maps = {"Wretched Front"},
                 Scripts = {
-                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
                 },
             },
             Win = {
@@ -266,10 +265,9 @@ return {
                 Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
                 Golden = {},
                 SkillTree = {},
-                Maps = {"Lay By", "Simplicity"},
+                Maps = {"Wretched Front"},
                 Scripts = {
-                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
                 },
             },
         },
