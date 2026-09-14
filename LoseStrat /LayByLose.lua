@@ -1,3 +1,5 @@
+local Globals = getgenv()
+Globals.AutoSkip = true
 TDS:RemoveIndex()
 
 TDS:Place("Soldier", -2.623168468475342, 262.99998474121094, 271.58221435546875)
