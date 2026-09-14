@@ -219,4 +219,32 @@ return {
         "Molten",
         "Fallen",
     },
+
+	CrateConfigs = {
+        Lose = {
+            Level = 15,
+            Mode = "Molten",
+            Towers = {},
+            Golden = {},
+            SkillTree = {},
+            Maps = {"Lay By", "Simplicity"},
+            Scripts = {
+                ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
+                ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+            },
+        },
+        Win = {
+            Level = 175,
+            Mode = "Fallen",
+            Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
+            Golden = {},
+            SkillTree = {},
+            Maps = {"Lay By", "Simplicity"},
+            Scripts = {
+                ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+            },
+        },
+    }
+	
 }
