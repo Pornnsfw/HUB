@@ -1,6 +1,13 @@
 --!strict
 --[[
-    GlassHubUI.lua (Cyber-Frost SkyBlue Edition - Perfect Layout & Header Fix)
+    antigravttyUI.lua (NovaGlass Remake - Device-Aware Adaptive Scaling)
+    - Automatically detects user device (Phone, Tablet, Desktop, Console)
+    - Dynamically scales GUI via UIScale to perfectly fit the user's specific screen
+    - Auto-adapts to mobile screen orientation changes (portrait <-> landscape)
+    - Strict boundary clamping preventing the GUI from ever going above the screen
+    - Enlarged high-contrast typography for optimal readability across all displays
+    - Layout protection preventing slider and toggle controls from overlapping text
+    - 100% compatibility with all original methods, props, and callbacks
 ]]--
 
 local Library = {}
@@ -14,13 +21,15 @@ Library.Assets = {
     Resize          = "rbxassetid://15082210525",
     Chevron         = "rbxassetid://14937709869",
     Arrow           = "rbxassetid://14923748517",
+    Button          = "rbxassetid://89839278613299",
+    ButtonIcon      = "rbxassetid://89839278613299",
     Search          = "rbxassetid://13847222481",
     Textbox         = "rbxassetid://13868675087",
     GlowDot         = "rbxassetid://105506802034513",
     ImageLogo       = "rbxassetid://111362591084511",
-    FloatingToggle  = "rbxassetid://99432006374500",
+    FloatingToggle  = "rbxassetid://89839278613299",
     Discord         = "rbxassetid://119690296342461",
-    Theme           = "rbxassetid://14923748517",
+    Theme           = "rbxassetid://10734950309",
     Home            = "rbxassetid://10723405374",
     User            = "rbxassetid://10747373176",
     Key             = "rbxassetid://10709790644",
@@ -31,63 +40,66 @@ Library.Assets = {
     Gear            = "rbxassetid://10734950309",
     Sliders         = "rbxassetid://10734950020",
     Terminal        = "rbxassetid://10734951847",
+    Background      = "rbxassetid://82941526973068",
+    AutoHubBg       = "rbxassetid://82941526973068",
+    AutoHubIcon     = "autohub_icon.png",
 }
 
 Library.Themes = {
+    CyberNeon = {
+        Background    = Color3.fromRGB(13, 14, 21),
+        Sidebar       = Color3.fromRGB(10, 11, 17),
+        Surface       = Color3.fromRGB(20, 22, 33),
+        SurfaceHover  = Color3.fromRGB(27, 30, 45),
+        Stroke        = Color3.fromRGB(168, 85, 247),
+        StrokeSoft    = Color3.fromRGB(40, 44, 65),
+        Text          = Color3.fromRGB(245, 247, 250),
+        Muted         = Color3.fromRGB(145, 155, 175),
+        Accent        = Color3.fromRGB(168, 85, 247),
+        AccentHover   = Color3.fromRGB(192, 132, 252),
+        AccentSoft    = Color3.fromRGB(38, 24, 58),
+        Success       = Color3.fromRGB(34, 197, 94),
+        Warning       = Color3.fromRGB(245, 158, 11),
+        Danger        = Color3.fromRGB(239, 68, 68),
+    },
     SkyBlue = {
-        Background    = Color3.fromRGB(11, 16, 28),
-        Sidebar       = Color3.fromRGB(15, 22, 38),
-        Surface       = Color3.fromRGB(20, 30, 52),
-        SurfaceHover  = Color3.fromRGB(26, 40, 70),
-        Stroke        = Color3.fromRGB(50, 95, 160),
-        StrokeSoft    = Color3.fromRGB(32, 58, 98),
-        Text          = Color3.fromRGB(245, 250, 255),
-        Muted         = Color3.fromRGB(140, 165, 205),
-        Accent        = Color3.fromRGB(0, 168, 255),
-        AccentHover   = Color3.fromRGB(56, 192, 255),
-        AccentSoft    = Color3.fromRGB(14, 50, 90),
-        Success       = Color3.fromRGB(0, 235, 140),
-        Warning       = Color3.fromRGB(255, 190, 40),
-        Danger        = Color3.fromRGB(255, 75, 105),
+        Background    = Color3.fromRGB(11, 17, 28),
+        Sidebar       = Color3.fromRGB(9, 13, 22),
+        Surface       = Color3.fromRGB(17, 27, 44),
+        SurfaceHover  = Color3.fromRGB(24, 38, 62),
+        Stroke        = Color3.fromRGB(14, 165, 233),
+        StrokeSoft    = Color3.fromRGB(32, 48, 75),
+        Text          = Color3.fromRGB(240, 246, 255),
+        Muted         = Color3.fromRGB(140, 165, 195),
+        Accent        = Color3.fromRGB(14, 165, 233),
+        AccentHover   = Color3.fromRGB(56, 189, 248),
+        AccentSoft    = Color3.fromRGB(16, 42, 70),
+        Success       = Color3.fromRGB(16, 185, 129),
+        Warning       = Color3.fromRGB(245, 158, 11),
+        Danger        = Color3.fromRGB(244, 63, 94),
     },
     DeepAzure = {
-        Background    = Color3.fromRGB(8, 12, 20),
-        Sidebar       = Color3.fromRGB(12, 18, 30),
-        Surface       = Color3.fromRGB(16, 25, 44),
-        SurfaceHover  = Color3.fromRGB(22, 35, 60),
-        Stroke        = Color3.fromRGB(40, 120, 215),
-        StrokeSoft    = Color3.fromRGB(25, 72, 130),
-        Text          = Color3.fromRGB(255, 255, 255),
-        Muted         = Color3.fromRGB(130, 160, 200),
-        Accent        = Color3.fromRGB(30, 144, 255),
-        AccentHover   = Color3.fromRGB(80, 175, 255),
-        AccentSoft    = Color3.fromRGB(16, 45, 85),
-        Success       = Color3.fromRGB(0, 235, 140),
-        Warning       = Color3.fromRGB(255, 190, 40),
-        Danger        = Color3.fromRGB(255, 75, 105),
-    },
-    FrostCyan = {
-        Background    = Color3.fromRGB(10, 18, 26),
-        Sidebar       = Color3.fromRGB(14, 26, 38),
-        Surface       = Color3.fromRGB(20, 38, 54),
-        SurfaceHover  = Color3.fromRGB(28, 50, 72),
-        Stroke        = Color3.fromRGB(45, 175, 210),
-        StrokeSoft    = Color3.fromRGB(28, 100, 125),
-        Text          = Color3.fromRGB(240, 252, 255),
-        Muted         = Color3.fromRGB(135, 180, 200),
-        Accent        = Color3.fromRGB(0, 215, 255),
-        AccentHover   = Color3.fromRGB(80, 230, 255),
-        AccentSoft    = Color3.fromRGB(14, 65, 85),
-        Success       = Color3.fromRGB(0, 235, 140),
-        Warning       = Color3.fromRGB(255, 190, 40),
-        Danger        = Color3.fromRGB(255, 75, 105),
+        Background    = Color3.fromRGB(10, 13, 23),
+        Sidebar       = Color3.fromRGB(8, 10, 18),
+        Surface       = Color3.fromRGB(16, 22, 38),
+        SurfaceHover  = Color3.fromRGB(22, 31, 54),
+        Stroke        = Color3.fromRGB(59, 130, 246),
+        StrokeSoft    = Color3.fromRGB(28, 40, 68),
+        Text          = Color3.fromRGB(245, 248, 255),
+        Muted         = Color3.fromRGB(135, 155, 190),
+        Accent        = Color3.fromRGB(59, 130, 246),
+        AccentHover   = Color3.fromRGB(96, 165, 250),
+        AccentSoft    = Color3.fromRGB(18, 36, 72),
+        Success       = Color3.fromRGB(34, 197, 94),
+        Warning       = Color3.fromRGB(251, 191, 36),
+        Danger        = Color3.fromRGB(239, 68, 68),
     }
 }
 
-local THEME_ORDER = { "SkyBlue", "DeepAzure", "FrostCyan" }
+local THEME_ORDER = { "CyberNeon", "SkyBlue", "DeepAzure" }
 
 local function resolveTheme(themeInput: any): { [string]: Color3 }
-    local base = Library.Themes.SkyBlue
+    local base = Library.Themes.CyberNeon
     local resolved = {}
     for k, v in pairs(base) do
         resolved[k] = v
@@ -109,9 +121,87 @@ end
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
 local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
+
+local function getTopInset(): number
+    local topInset = 36
+    pcall(function()
+        topInset = GuiService:GetGuiInset().Y
+    end)
+    return math.max(topInset, 0)
+end
+
+-- Comprehensive Device Type Detection
+local function detectDeviceType(): string
+    if GuiService:IsTenFootInterface() then
+        return "Console"
+    end
+    local camera = workspace.CurrentCamera
+    local vp = (camera and camera.ViewportSize) or Vector2.new(1920, 1080)
+    local minDim = math.min(vp.X, vp.Y)
+    local maxDim = math.max(vp.X, vp.Y)
+    local isTouch = UserInputService.TouchEnabled
+
+    if isTouch and not UserInputService.KeyboardEnabled and not UserInputService.MouseEnabled then
+        if minDim >= 580 and maxDim >= 880 then
+            return "Tablet"
+        else
+            return "Phone"
+        end
+    elseif isTouch then
+        if minDim < 520 then
+            return "Phone"
+        elseif minDim < 720 then
+            return "Tablet"
+        else
+            return "Desktop"
+        end
+    else
+        return "Desktop"
+    end
+end
+
+-- Device-Specific Scale Calculation
+local function calculateDeviceScale(deviceType: string, vp: Vector2, topInset: number): number
+    local availableHeight = math.max(vp.Y - topInset - 24, 200)
+    local availableWidth = math.max(vp.X - 32, 300)
+    
+    local baseW = 800
+    local baseH = 540
+
+    if deviceType == "Phone" then
+        -- On phones, scale down so the UI fits the screen comfortably with room around it
+        local fitX = availableWidth / (baseW * 1.05)
+        local fitY = availableHeight / (baseH * 1.05)
+        return math.clamp(math.min(fitX, fitY), 0.50, 0.76)
+    elseif deviceType == "Tablet" then
+        -- On tablets, provide a balanced medium scale
+        local fitX = availableWidth / (baseW * 1.1)
+        local fitY = availableHeight / (baseH * 1.1)
+        return math.clamp(math.min(fitX, fitY), 0.72, 0.95)
+    elseif deviceType == "Console" then
+        -- 10-foot distance TV experience
+        return 1.20
+    else
+        -- Desktop: scale according to resolution
+        if vp.Y >= 1440 then
+            -- 1440p / 4K monitors: scale up slightly for high-DPI readability
+            return math.clamp(vp.Y / 1200, 1.0, 1.30)
+        elseif vp.Y <= 720 or vp.X <= 1280 then
+            -- Small laptop or small windowed mode
+            local fitX = availableWidth / (baseW * 1.08)
+            local fitY = availableHeight / (baseH * 1.08)
+            return math.clamp(math.min(fitX, fitY), 0.75, 1.0)
+        else
+            -- Standard 1080p Desktop: 1.0 native
+            return 1.0
+        end
+    end
+end
 
 local function tween(object: Instance, time: number, goal: { [string]: any }, style: Enum.EasingStyle?, direction: Enum.EasingDirection?)
     local info = TweenInfo.new(time, style or Enum.EasingStyle.Quart, direction or Enum.EasingDirection.Out)
@@ -146,7 +236,7 @@ local function stroke(parent: Instance, color: Color3, thickness: number?, trans
     return make("UIStroke", {
         Color = color,
         Thickness = thickness or 1,
-        Transparency = transparency or 0,
+        Transparency = transparency or 0.65,
         ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
         Parent = parent,
     })
@@ -183,9 +273,36 @@ local function normalizeAsset(image: any): string
         if Library.Assets[image] then
             return Library.Assets[image]
         end
-        return "rbxassetid://" .. image
+        -- Support local exploit asset loaders (getcustomasset / getsynasset)
+        local getCustom = (typeof(getcustomasset) == "function" and getcustomasset)
+            or (typeof(getsynasset) == "function" and getsynasset)
+        if getCustom then
+            local isFileFn = (typeof(isfile) == "function" and isfile)
+            if (isFileFn and isFileFn(image)) or image:find("%.png$") or image:find("%.jpg$") or image:find("%.jpeg$") then
+                local ok, asset = pcall(getCustom, image)
+                if ok and asset and asset ~= "" then return asset end
+            end
+        end
+        if tonumber(image) then
+            return "rbxassetid://" .. image
+        end
+        -- Fallback if local image file wasn't found
+        if image:find("%.png$") or image:find("%.jpg$") then
+            return Library.Assets.ImageLogo or "rbxassetid://111362591084511"
+        end
+        return image
     end
     return ""
+end
+
+local function createDefaultBorderSequence(theme: { [string]: Color3 }): ColorSequence
+    return ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, theme.Accent),
+        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(168, 85, 247)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(56, 189, 248)),
+        ColorSequenceKeypoint.new(0.75, theme.Stroke),
+        ColorSequenceKeypoint.new(1.00, theme.Accent),
+    })
 end
 
 local function getParentGui()
@@ -215,24 +332,56 @@ local function addRipple(button: GuiButton, color: Color3)
             Position = UDim2.fromOffset(x - button.AbsolutePosition.X, y - button.AbsolutePosition.Y),
             Size = UDim2.fromOffset(0, 0),
             BackgroundColor3 = color,
-            BackgroundTransparency = 0.4,
+            BackgroundTransparency = 0.65,
             BorderSizePixel = 0,
             ZIndex = button.ZIndex + 2,
             Parent = button,
         })
         corner(ripple, 100)
         local size = math.max(button.AbsoluteSize.X, button.AbsoluteSize.Y) * 2.2
-        tween(ripple, 0.4, {
+        tween(ripple, 0.45, {
             Size = UDim2.fromOffset(size, size),
             BackgroundTransparency = 1,
-        })
-        task.delay(0.42, function()
+        }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+        task.delay(0.48, function()
             if ripple then ripple:Destroy() end
         end)
     end)
 end
 
-local function bindDrag(handle: GuiObject, target: GuiObject)
+-- Clamp Window so it cannot go above the screen or off the viewport
+local function clampWindowPosition(target: GuiObject, uiScale: UIScale?)
+    local camera = workspace.CurrentCamera
+    local vp = (camera and camera.ViewportSize) or Vector2.new(1920, 1080)
+    local scale = uiScale and uiScale.Scale or 1
+    local topInset = getTopInset()
+
+    local halfH = (target.AbsoluteSize.Y * scale) / 2
+    local halfW = (target.AbsoluteSize.X * scale) / 2
+
+    local minOffsetY = (topInset + halfH - (vp.Y * 0.5)) / scale
+    local maxOffsetY = ((vp.Y * 0.5) - halfH) / scale
+    if minOffsetY > maxOffsetY then
+        maxOffsetY = minOffsetY
+    end
+
+    local minOffsetX = (halfW - (vp.X * 0.5)) / scale
+    local maxOffsetX = ((vp.X * 0.5) - halfW) / scale
+    if minOffsetX > maxOffsetX then
+        minOffsetX = 0
+        maxOffsetX = 0
+    end
+
+    local currentOffsetY = target.Position.Y.Offset
+    local currentOffsetX = target.Position.X.Offset
+
+    local clampedY = math.clamp(currentOffsetY, minOffsetY, maxOffsetY)
+    local clampedX = math.clamp(currentOffsetX, minOffsetX, maxOffsetX)
+
+    target.Position = UDim2.new(0.5, clampedX, 0.5, clampedY)
+end
+
+local function bindDrag(handle: GuiObject, target: GuiObject, uiScale: UIScale?)
     local dragging = false
     local dragInput: InputObject? = nil
     local dragStart: Vector3? = nil
@@ -260,17 +409,35 @@ local function bindDrag(handle: GuiObject, target: GuiObject)
     UserInputService.InputChanged:Connect(function(input)
         if dragging and input == dragInput and dragStart and startPosition then
             local delta = input.Position - dragStart
+            local scale = (uiScale and uiScale.Scale) or 1
+            local camera = workspace.CurrentCamera
+            local vp = (camera and camera.ViewportSize) or Vector2.new(1920, 1080)
+            local topInset = getTopInset()
+
+            local rawOffsetX = startPosition.X.Offset + (delta.X / scale)
+            local rawOffsetY = startPosition.Y.Offset + (delta.Y / scale)
+
+            -- Keep GUI strictly from going above the screen:
+            local halfH = (target.AbsoluteSize.Y * scale) / 2
+            local minOffsetY = (topInset + halfH - (vp.Y * 0.5)) / scale
+            local maxOffsetY = ((vp.Y * 0.5) - halfH) / scale
+            if minOffsetY > maxOffsetY then
+                maxOffsetY = minOffsetY
+            end
+
+            local clampedY = math.clamp(rawOffsetY, minOffsetY, maxOffsetY)
+
             target.Position = UDim2.new(
                 startPosition.X.Scale,
-                startPosition.X.Offset + delta.X,
+                rawOffsetX,
                 startPosition.Y.Scale,
-                startPosition.Y.Offset + delta.Y
+                clampedY
             )
         end
     end)
 end
 
-local function bindResize(handle: GuiObject, target: GuiObject, minSize: Vector2)
+local function bindResize(handle: GuiObject, target: GuiObject, minSize: Vector2, uiScale: UIScale?)
     local resizing = false
     local resizeInput: InputObject? = nil
     local startPos: Vector2? = nil
@@ -297,11 +464,13 @@ local function bindResize(handle: GuiObject, target: GuiObject, minSize: Vector2
 
     UserInputService.InputChanged:Connect(function(input)
         if resizing and input == resizeInput and startPos and startSize then
+            local scale = (uiScale and uiScale.Scale) or 1
             local currentPos = Vector2.new(input.Position.X, input.Position.Y)
-            local delta = currentPos - startPos
+            local delta = (currentPos - startPos) / scale
             local newX = math.max(minSize.X, startSize.X.Offset + delta.X)
             local newY = math.max(minSize.Y, startSize.Y.Offset + delta.Y)
             target.Size = UDim2.fromOffset(newX, newY)
+            clampWindowPosition(target, uiScale)
         end
     end)
 end
@@ -331,8 +500,6 @@ local function createText(parent: Instance, name: string, text: string, size: nu
         TextXAlignment = Enum.TextXAlignment.Left,
         TextYAlignment = Enum.TextYAlignment.Center,
         TextWrapped = true,
-        TextStrokeColor3 = Color3.fromRGB(0, 0, 0),
-        TextStrokeTransparency = bold and 0.6 or 0.8,
         BackgroundTransparency = 1,
         Size = UDim2.new(1, 0, 0, 0),
         AutomaticSize = Enum.AutomaticSize.Y,
@@ -341,76 +508,123 @@ local function createText(parent: Instance, name: string, text: string, size: nu
     })
 end
 
-local function createCoreRow(self: any, parent: Instance, title: string, desc: string?, image: any?, height: number?)
+-- Core Row Component: Clean layout with reserved width for right controls to prevent text collision
+local function createCoreRow(self: any, parent: Instance, title: string, desc: string?, image: any?, height: number?, rightReservedWidth: number?)
     local iconAsset = normalizeAsset(image or "")
     local hasIcon = iconAsset ~= ""
-    local leftInset = hasIcon and 56 or 16
+    local leftInset = hasIcon and 48 or 14
+    local reservedRight = rightReservedWidth or 130
+    local hasDesc = desc and desc ~= ""
+    local actualHeight = height or (hasDesc and 68 or 52)
 
     local row = make("TextButton", {
         Name = "CoreRow",
         Text = "",
         AutoButtonColor = false,
-        Size = UDim2.new(1, 0, 0, height or 56),
+        Size = UDim2.new(1, 0, 0, actualHeight),
         BackgroundColor3 = self.Theme.Surface,
-        BackgroundTransparency = 0.08,
+        BackgroundTransparency = 0.25,
         BorderSizePixel = 0,
         LayoutOrder = 10,
         Parent = parent,
     })
     row.ClipsDescendants = true
-    corner(row, 12)
-    local rowStroke = stroke(row, self.Theme.Stroke, 1, 0.3)
+    corner(row, 10)
+    local rowStroke = stroke(row, self.Theme.StrokeSoft, 1, 0.7)
 
-    local leftGlow = make("Frame", {
-        Name = "LeftGlow",
-        Position = UDim2.fromOffset(0, 10),
-        Size = UDim2.new(0, 3.5, 1, -20),
+    local leftIndicator = make("Frame", {
+        Name = "LeftIndicator",
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, 0, 0.5, 0),
+        Size = UDim2.new(0, 3, 0.45, 0),
         BackgroundColor3 = self.Theme.Accent,
-        BackgroundTransparency = 0.5,
+        BackgroundTransparency = 1,
         BorderSizePixel = 0,
         Parent = row,
     })
-    corner(leftGlow, 2)
+    corner(leftIndicator, 2)
 
     local iconWrap = make("Frame", {
         Name = "IconWrap",
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, 10, 0.5, 0),
+        Size = UDim2.fromOffset(30, 30),
         BackgroundColor3 = self.Theme.Sidebar,
-        BackgroundTransparency = 0.15,
+        BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
-        Position = UDim2.fromOffset(11, 11),
-        Size = UDim2.fromOffset(34, 34),
         Visible = hasIcon,
         Parent = row,
     })
-    corner(iconWrap, 9)
-    stroke(iconWrap, self.Theme.StrokeSoft, 1, 0.25)
-    local icon = createIcon(iconWrap, iconAsset, 18, self.Theme.Accent, 0.05)
+    corner(iconWrap, 7)
+    local iconWrapStroke = stroke(iconWrap, self.Theme.StrokeSoft, 1, 0.8)
+
+    local icon = createIcon(iconWrap, iconAsset, 16, self.Theme.Accent, 0)
     icon.AnchorPoint = Vector2.new(0.5, 0.5)
     icon.Position = UDim2.fromScale(0.5, 0.5)
 
+    -- textWrap uses reservedRight with ample space so title never breaks awkwardly
     local textWrap = make("Frame", {
         Name = "TextWrap",
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, leftInset, 0.5, 0),
+        Size = UDim2.new(1, -leftInset - reservedRight, 1, -8),
         BackgroundTransparency = 1,
-        Position = UDim2.fromOffset(leftInset, 10),
-        Size = UDim2.new(1, -leftInset - 36, 1, -20),
+        ClipsDescendants = true,
         Parent = row,
     })
-    list(textWrap, 2)
+    local tLayout = list(textWrap, 2)
+    tLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
-    createText(textWrap, "Title", title, 12, self.Theme.Text, true, 1)
-    if desc and desc ~= "" then
-        createText(textWrap, "Desc", desc, 9.5, self.Theme.Muted, false, 2)
+    -- Title: single-line GothamBold with TextTruncate so it never breaks into "Server" / "Code"
+    make("TextLabel", {
+        Name = "Title",
+        Text = title,
+        Font = Enum.Font.GothamBold,
+        TextSize = 14,
+        TextColor3 = self.Theme.Text,
+        TextXAlignment = Enum.TextXAlignment.Left,
+        TextYAlignment = Enum.TextYAlignment.Center,
+        TextTruncate = Enum.TextTruncate.AtEnd,
+        TextWrapped = false,
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 0, 18),
+        LayoutOrder = 1,
+        Parent = textWrap,
+    })
+
+    if hasDesc then
+        make("TextLabel", {
+            Name = "Desc",
+            Text = desc :: string,
+            Font = Enum.Font.GothamMedium,
+            TextSize = 12,
+            TextColor3 = self.Theme.Muted,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Top,
+            TextTruncate = Enum.TextTruncate.AtEnd,
+            TextWrapped = true,
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1, 0, 0, 26),
+            LayoutOrder = 2,
+            Parent = textWrap,
+        })
     end
 
     row.MouseEnter:Connect(function()
-        tween(row, 0.2, { BackgroundColor3 = self.Theme.SurfaceHover, BackgroundTransparency = 0 }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-        tween(rowStroke, 0.2, { Color = self.Theme.Accent, Transparency = 0.1 })
-        tween(leftGlow, 0.2, { BackgroundTransparency = 0, Size = UDim2.new(0, 4.5, 1, -12), Position = UDim2.fromOffset(0, 6) })
+        tween(row, 0.2, { BackgroundColor3 = self.Theme.SurfaceHover, BackgroundTransparency = 0.1 })
+        tween(rowStroke, 0.2, { Color = self.Theme.Accent, Transparency = 0.4 })
+        tween(leftIndicator, 0.2, { BackgroundTransparency = 0, Size = UDim2.new(0, 3, 0.65, 0) })
+        if hasIcon then
+            tween(iconWrapStroke, 0.2, { Color = self.Theme.Accent, Transparency = 0.5 })
+        end
     end)
     row.MouseLeave:Connect(function()
-        tween(row, 0.2, { BackgroundColor3 = self.Theme.Surface, BackgroundTransparency = 0.08 })
-        tween(rowStroke, 0.2, { Color = self.Theme.Stroke, Transparency = 0.3 })
-        tween(leftGlow, 0.2, { BackgroundTransparency = 0.5, Size = UDim2.new(0, 3.5, 1, -20), Position = UDim2.fromOffset(0, 10) })
+        tween(row, 0.2, { BackgroundColor3 = self.Theme.Surface, BackgroundTransparency = 0.25 })
+        tween(rowStroke, 0.2, { Color = self.Theme.StrokeSoft, Transparency = 0.7 })
+        tween(leftIndicator, 0.2, { BackgroundTransparency = 1, Size = UDim2.new(0, 3, 0.45, 0) })
+        if hasIcon then
+            tween(iconWrapStroke, 0.2, { Color = self.Theme.StrokeSoft, Transparency = 0.8 })
+        end
     end)
 
     return row
@@ -420,7 +634,6 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
     local api = {}
 
     local function checkPremium(props: { [string]: any }?): boolean
-        -- If IsPrem is explicitly false, they don't own premium -> block and notify
         if props and props.IsPrem == false then
             window:Notify({
                 Title = "Premium Required",
@@ -429,7 +642,6 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             })
             return false
         end
-        -- If nil (free) or true (owned premium), allow it
         return true
     end
 
@@ -443,11 +655,11 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             LayoutOrder = props.Order or 10,
             Parent = scroll,
         })
-        list(section, 8)
+        list(section, 10)
 
         local headerWrap = make("Frame", {
             Name = "SectionHeaderWrap",
-            Size = UDim2.new(1, 0, 0, 22),
+            Size = UDim2.new(1, 0, 0, 26),
             BackgroundTransparency = 1,
             LayoutOrder = 1,
             Parent = section,
@@ -455,24 +667,24 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
         local hLayout = list(headerWrap, 8, Enum.FillDirection.Horizontal)
         hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
-        local dot = make("Frame", {
-            Name = "SectionDot",
-            Size = UDim2.fromOffset(6, 6),
+        local accentBar = make("Frame", {
+            Name = "AccentBar",
+            Size = UDim2.fromOffset(3, 16),
             BackgroundColor3 = window.Theme.Accent,
             BorderSizePixel = 0,
             Parent = headerWrap,
         })
-        corner(dot, 6)
+        corner(accentBar, 2)
 
         make("TextLabel", {
             Name = "SectionTitle",
             Text = string.upper(tostring(props.Title or "Section")),
             Font = Enum.Font.GothamBold,
-            TextSize = 11,
+            TextSize = 14,
             TextColor3 = window.Theme.Muted,
             TextXAlignment = Enum.TextXAlignment.Left,
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, -16, 1, 0),
+            Size = UDim2.new(1, -20, 1, 0),
             Parent = headerWrap,
         })
 
@@ -483,7 +695,7 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
 
     function api:Label(props: { [string]: any })
         props = props or {}
-        local row = createCoreRow(window, scroll, tostring(props.Title or "Label"), props.Desc or "", props.Image or "", props.Height or 54)
+        local row = createCoreRow(window, scroll, tostring(props.Title or "Label"), props.Desc or "", props.Image or "", props.Height or 60, 20)
         local item = {}
         function item:SetTitle(value: string)
             local titleLabel = row:FindFirstChild("Title", true)
@@ -500,19 +712,40 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
     function api:Button(props: { [string]: any })
         props = props or {}
         local callback = props.Callback or function() end
-        local row = createCoreRow(window, scroll, tostring(props.Title or "Button"), props.Desc or "", props.Image or "Arrow", props.Height or 54)
+        local row = createCoreRow(window, scroll, tostring(props.Title or "Button"), props.Desc or "", props.Image or "Button", props.Height or 60, 50)
         addRipple(row, window.Theme.Accent)
 
-        local glyph = createIcon(row, props.RightIcon or "Arrow", 16, window.Theme.Muted, 0.1)
-        glyph.AnchorPoint = Vector2.new(1, 0.5)
-        glyph.Position = UDim2.new(1, -16, 0.5, 0)
+        local actionPill = make("Frame", {
+            Name = "ActionPill",
+            AnchorPoint = Vector2.new(1, 0.5),
+            Position = UDim2.new(1, -14, 0.5, 0),
+            Size = UDim2.fromOffset(32, 32),
+            BackgroundColor3 = window.Theme.Sidebar,
+            BackgroundTransparency = 0.4,
+            BorderSizePixel = 0,
+            Parent = row,
+        })
+        corner(actionPill, 8)
+        stroke(actionPill, window.Theme.StrokeSoft, 1, 0.8)
+
+        local glyph = createIcon(actionPill, props.RightIcon or "Button", 16, window.Theme.Muted, 0)
+        glyph.AnchorPoint = Vector2.new(0.5, 0.5)
+        glyph.Position = UDim2.fromScale(0.5, 0.5)
+
+        row.MouseEnter:Connect(function()
+            tween(glyph, 0.15, { ImageColor3 = window.Theme.Accent })
+            tween(actionPill, 0.15, { BackgroundColor3 = window.Theme.AccentSoft, BackgroundTransparency = 0.1 })
+        end)
+        row.MouseLeave:Connect(function()
+            tween(glyph, 0.15, { ImageColor3 = window.Theme.Muted })
+            tween(actionPill, 0.15, { BackgroundColor3 = window.Theme.Sidebar, BackgroundTransparency = 0.4 })
+        end)
 
         row.MouseButton1Click:Connect(function()
             if not checkPremium(props) then return end
-
-            tween(row, 0.08, { Size = UDim2.new(1, 0, 0, (props.Height or 54) - 4) })
+            tween(row, 0.08, { Size = UDim2.new(1, 0, 0, (props.Height or 60) - 3) })
             task.delay(0.08, function()
-                tween(row, 0.12, { Size = UDim2.new(1, 0, 0, props.Height or 54) })
+                tween(row, 0.12, { Size = UDim2.new(1, 0, 0, props.Height or 60) })
             end)
             task.spawn(callback)
         end)
@@ -530,51 +763,45 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
         props = props or {}
         local value = props.Value == true
         local callback = props.Callback or function() end
-        local row = createCoreRow(window, scroll, tostring(props.Title or "Toggle"), props.Desc or "", props.Image or "", props.Height or 56)
+        local row = createCoreRow(window, scroll, tostring(props.Title or "Toggle"), props.Desc or "", props.Image or "", props.Height or 60, 68)
         addRipple(row, window.Theme.Accent)
-
-        local leftGlow = row:FindFirstChild("LeftGlow")
 
         local switch = make("Frame", {
             Name = "Switch",
             AnchorPoint = Vector2.new(1, 0.5),
             Position = UDim2.new(1, -16, 0.5, 0),
-            Size = UDim2.fromOffset(46, 24),
-            BackgroundColor3 = value and window.Theme.Success or window.Theme.StrokeSoft,
-            BackgroundTransparency = value and 0.05 or 0.3,
+            Size = UDim2.fromOffset(48, 26),
+            BackgroundColor3 = value and window.Theme.Success or window.Theme.Sidebar,
+            BackgroundTransparency = value and 0.1 or 0.3,
             BorderSizePixel = 0,
             Parent = row,
         })
-        corner(switch, 12)
-        local switchStroke = stroke(switch, value and window.Theme.Success or window.Theme.StrokeSoft, 1.2, 0.25)
+        corner(switch, 13)
+        local switchStroke = stroke(switch, value and window.Theme.Success or window.Theme.StrokeSoft, 1, value and 0.3 or 0.6)
 
         local knob = make("Frame", {
             Name = "Knob",
-            Size = UDim2.fromOffset(18, 18),
-            Position = value and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 3, 0.5, -9),
-            BackgroundColor3 = window.Theme.Text,
+            Size = UDim2.fromOffset(20, 20),
+            Position = value and UDim2.new(1, -23, 0.5, -10) or UDim2.new(0, 3, 0.5, -10),
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
             BorderSizePixel = 0,
             Parent = switch,
         })
-        corner(knob, 9)
+        corner(knob, 10)
 
         local function setValue(nextValue: boolean, fire: boolean?)
             value = nextValue == true
             tween(switch, 0.22, {
-                BackgroundColor3 = value and window.Theme.Success or window.Theme.StrokeSoft,
-            }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+                BackgroundColor3 = value and window.Theme.Success or window.Theme.Sidebar,
+                BackgroundTransparency = value and 0.1 or 0.3,
+            }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
             tween(switchStroke, 0.22, {
                 Color = value and window.Theme.Success or window.Theme.StrokeSoft,
+                Transparency = value and 0.3 or 0.6,
             })
             tween(knob, 0.22, {
-                Position = value and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 3, 0.5, -9),
+                Position = value and UDim2.new(1, -23, 0.5, -10) or UDim2.new(0, 3, 0.5, -10),
             }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-            if leftGlow and leftGlow:IsA("Frame") then
-                tween(leftGlow, 0.22, {
-                    BackgroundColor3 = value and window.Theme.Success or window.Theme.Accent,
-                    BackgroundTransparency = value and 0.05 or 0.5,
-                })
-            end
             if fire then
                 task.spawn(function() callback(value) end)
             end
@@ -614,56 +841,70 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             LayoutOrder = 10,
             Parent = scroll,
         })
-        list(container, 8)
+        list(container, 6)
 
-        local row = createCoreRow(window, container, title, desc, props.Image or "", props.Height or 56)
+        local pillWidth = props.ValueWidth or 160
+        local row = createCoreRow(window, container, title, desc, props.Image or "", props.Height or 60, pillWidth + 24)
         addRipple(row, window.Theme.Accent)
+
+        local pillWrap = make("Frame", {
+            Name = "ValuePill",
+            AnchorPoint = Vector2.new(1, 0.5),
+            Position = UDim2.new(1, -14, 0.5, 0),
+            Size = UDim2.fromOffset(pillWidth, 34),
+            BackgroundColor3 = window.Theme.Sidebar,
+            BackgroundTransparency = 0.3,
+            BorderSizePixel = 0,
+            Parent = row,
+        })
+        corner(pillWrap, 8)
+        local pillStroke = stroke(pillWrap, window.Theme.StrokeSoft, 1, 0.8)
+        padding(pillWrap, 12, 0, 12, 0)
 
         local valueLabel = make("TextLabel", {
             Name = "Value",
             Text = multi and table.concat(selected, ", ") or tostring(selected or "Select"),
             Font = Enum.Font.GothamBold,
-            TextSize = 11,
+            TextSize = 13,
             TextColor3 = window.Theme.Accent,
-            TextXAlignment = Enum.TextXAlignment.Right,
+            TextXAlignment = Enum.TextXAlignment.Left,
             TextTruncate = Enum.TextTruncate.AtEnd,
             BackgroundTransparency = 1,
-            AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -40, 0.5, 0),
-            Size = UDim2.fromOffset(props.ValueWidth or 140, 22),
-            Parent = row,
+            Size = UDim2.new(1, -24, 1, 0),
+            Parent = pillWrap,
         })
 
-        local chevron = createIcon(row, "Chevron", 16, window.Theme.Muted, 0.1)
+        local chevron = createIcon(pillWrap, "Chevron", 16, window.Theme.Muted, 0)
         chevron.AnchorPoint = Vector2.new(1, 0.5)
-        chevron.Position = UDim2.new(1, -16, 0.5, 0)
+        chevron.Position = UDim2.new(1, 0, 0.5, 0)
 
         local listFrame = make("Frame", {
             Name = "DropdownList",
             Size = UDim2.new(1, 0, 0, 0),
             BackgroundColor3 = window.Theme.Sidebar,
-            BackgroundTransparency = 0.05,
+            BackgroundTransparency = 0.15,
             BorderSizePixel = 0,
             ClipsDescendants = true,
             Visible = false,
             LayoutOrder = 11,
             Parent = container,
         })
-        corner(listFrame, 12)
-        stroke(listFrame, window.Theme.Stroke, 1, 0.25)
-        padding(listFrame, 10, 10, 10, 10)
-        local optionLayout = list(listFrame, 6)
+        corner(listFrame, 10)
+        stroke(listFrame, window.Theme.StrokeSoft, 1, 0.6)
+        padding(listFrame, 6, 6, 6, 6)
+        local optionLayout = list(listFrame, 4)
 
         local open = false
         local buttons = {}
 
         local function getDropdownHeight()
-            return optionLayout.AbsoluteContentSize.Y + 20
+            return optionLayout.AbsoluteContentSize.Y + 12
         end
 
         local function closeDropdown()
             open = false
-            tween(listFrame, 0.2, { Size = UDim2.new(1, 0, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+            tween(listFrame, 0.2, { Size = UDim2.new(1, 0, 0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+            tween(chevron, 0.2, { Rotation = 0 })
             task.delay(0.2, function()
                 if not open and listFrame.Parent then listFrame.Visible = false end
             end)
@@ -673,7 +914,8 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             open = true
             listFrame.Visible = true
             listFrame.Size = UDim2.new(1, 0, 0, 0)
-            tween(listFrame, 0.25, { Size = UDim2.new(1, 0, 0, getDropdownHeight()) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            tween(listFrame, 0.25, { Size = UDim2.new(1, 0, 0, getDropdownHeight()) }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+            tween(chevron, 0.2, { Rotation = 180 })
         end
 
         local function selectedContains(val: any)
@@ -688,25 +930,26 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 local active = selectedContains(opt)
                 btn.TextColor3 = active and window.Theme.Accent or window.Theme.Text
                 btn.BackgroundColor3 = active and window.Theme.AccentSoft or window.Theme.Surface
+                btn.BackgroundTransparency = active and 0.2 or 0.7
             end
         end
 
         local function addOption(opt: any)
             local btn = make("TextButton", {
                 Name = "Option",
-                Text = "  " .. tostring(opt),
+                Text = "   " .. tostring(opt),
                 Font = Enum.Font.GothamMedium,
-                TextSize = 11.5,
+                TextSize = 14,
                 TextColor3 = selectedContains(opt) and window.Theme.Accent or window.Theme.Text,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 AutoButtonColor = false,
                 BackgroundColor3 = selectedContains(opt) and window.Theme.AccentSoft or window.Theme.Surface,
-                BackgroundTransparency = 0.08,
+                BackgroundTransparency = selectedContains(opt) and 0.2 or 0.7,
                 BorderSizePixel = 0,
-                Size = UDim2.new(1, 0, 0, 30),
+                Size = UDim2.new(1, 0, 0, 36),
                 Parent = listFrame,
             })
-            corner(btn, 8)
+            corner(btn, 6)
             addRipple(btn, window.Theme.Accent)
             buttons[opt] = btn
 
@@ -730,7 +973,6 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
         row.MouseButton1Click:Connect(function()
             if not checkPremium(props) then return end
             if open then closeDropdown() else openDropdown() end
-            tween(chevron, 0.22, { Rotation = open and 180 or 0 }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
         end)
 
         local item = {}
@@ -748,15 +990,15 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
 
         local row = make("Frame", {
             Name = "SegmentedContainer",
-            Size = UDim2.new(1, 0, 0, 48),
-            BackgroundColor3 = window.Theme.Sidebar,
-            BackgroundTransparency = 0.08,
+            Size = UDim2.new(1, 0, 0, 52),
+            BackgroundColor3 = window.Theme.Surface,
+            BackgroundTransparency = 0.35,
             BorderSizePixel = 0,
             LayoutOrder = 10,
             Parent = scroll,
         })
-        corner(row, 12)
-        stroke(row, window.Theme.StrokeSoft, 1, 0.3)
+        corner(row, 10)
+        stroke(row, window.Theme.StrokeSoft, 1, 0.75)
         padding(row, 6, 6, 6, 6)
         local segLayout = list(row, 6, Enum.FillDirection.Horizontal)
         segLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -769,8 +1011,8 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             for opt, btn in pairs(buttons) do
                 local active = opt == selected
                 tween(btn, 0.2, {
-                    BackgroundColor3 = active and window.Theme.Accent or window.Theme.Surface,
-                    BackgroundTransparency = active and 0 or 0.45,
+                    BackgroundColor3 = active and window.Theme.Accent or window.Theme.Sidebar,
+                    BackgroundTransparency = active and 0.15 or 0.6,
                 }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
                 btn.TextColor3 = active and Color3.fromRGB(255, 255, 255) or window.Theme.Muted
             end
@@ -781,16 +1023,16 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 Name = "Segment_" .. tostring(opt),
                 Text = tostring(opt),
                 Font = Enum.Font.GothamBold,
-                TextSize = 11.5,
+                TextSize = 14,
                 TextColor3 = opt == selected and Color3.fromRGB(255, 255, 255) or window.Theme.Muted,
                 AutoButtonColor = false,
-                BackgroundColor3 = opt == selected and window.Theme.Accent or window.Theme.Surface,
-                BackgroundTransparency = opt == selected and 0 or 0.45,
+                BackgroundColor3 = opt == selected and window.Theme.Accent or window.Theme.Sidebar,
+                BackgroundTransparency = opt == selected and 0.15 or 0.6,
                 BorderSizePixel = 0,
                 Size = UDim2.new(btnWidth, -4, 1, 0),
                 Parent = row,
             })
-            corner(btn, 9)
+            corner(btn, 8)
             addRipple(btn, Color3.fromRGB(255, 255, 255))
             buttons[opt] = btn
 
@@ -831,14 +1073,14 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
 
         local segRow = make("Frame", {
             Name = "SegmentedContainer",
-            Size = UDim2.new(1, 0, 0, 48),
-            BackgroundColor3 = window.Theme.Sidebar,
-            BackgroundTransparency = 0.08,
+            Size = UDim2.new(1, 0, 0, 50),
+            BackgroundColor3 = window.Theme.Surface,
+            BackgroundTransparency = 0.35,
             BorderSizePixel = 0,
             Parent = container,
         })
-        corner(segRow, 12)
-        stroke(segRow, window.Theme.StrokeSoft, 1, 0.3)
+        corner(segRow, 10)
+        stroke(segRow, window.Theme.StrokeSoft, 1, 0.75)
         padding(segRow, 6, 6, 6, 6)
         local segLayout = list(segRow, 6, Enum.FillDirection.Horizontal)
         segLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -852,46 +1094,45 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             Size = UDim2.new(1, 0, 0, 0),
             AutomaticSize = Enum.AutomaticSize.Y,
             BackgroundColor3 = window.Theme.Surface,
-            BackgroundTransparency = 0.06,
+            BackgroundTransparency = 0.25,
             BorderSizePixel = 0,
             Parent = container,
         })
-        corner(card, 14)
-        stroke(card, window.Theme.Stroke, 1, 0.3)
-        padding(card, 16, 16, 16, 16)
-        
-        local cardLayout = list(card, 12)
+        corner(card, 12)
+        stroke(card, window.Theme.StrokeSoft, 1, 0.65)
+        padding(card, 18, 16, 18, 16)
+        list(card, 14)
 
         local headerRow = make("Frame", {
             Name = "HeaderRow",
-            Size = UDim2.new(1, 0, 0, 28),
+            Size = UDim2.new(1, 0, 0, 32),
             BackgroundTransparency = 1,
             Parent = card,
         })
-        local cardTitleLabel = createText(headerRow, "CardTitle", "", 14, window.Theme.Text, true)
+        local cardTitleLabel = createText(headerRow, "CardTitle", "", 16, window.Theme.Text, true)
 
         local badgePill = make("Frame", {
             Name = "BadgePill",
             AnchorPoint = Vector2.new(1, 0.5),
             Position = UDim2.new(1, 0, 0.5, 0),
-            Size = UDim2.fromOffset(0, 24),
+            Size = UDim2.fromOffset(0, 26),
             AutomaticSize = Enum.AutomaticSize.X,
             BackgroundColor3 = window.Theme.AccentSoft,
             BorderSizePixel = 0,
             Parent = headerRow,
         })
-        corner(badgePill, 8)
-        padding(badgePill, 10, 2, 10, 2)
-        stroke(badgePill, window.Theme.Accent, 1, 0.4)
+        corner(badgePill, 6)
+        padding(badgePill, 10, 0, 10, 0)
+        stroke(badgePill, window.Theme.Accent, 1, 0.5)
 
         local badgeText = make("TextLabel", {
             Name = "BadgeText",
             Text = "",
             Font = Enum.Font.GothamBold,
-            TextSize = 10,
+            TextSize = 11,
             TextColor3 = window.Theme.Accent,
             BackgroundTransparency = 1,
-            Size = UDim2.fromOffset(0, 20),
+            Size = UDim2.fromOffset(0, 26),
             AutomaticSize = Enum.AutomaticSize.X,
             Parent = badgePill,
         })
@@ -903,21 +1144,21 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             BackgroundTransparency = 1,
             Parent = card,
         })
-        local checkListLayout = list(checklistContainer, 10)
+        list(checklistContainer, 10)
 
         local actionBtn = make("TextButton", {
             Name = "ActionButton",
             Text = "",
             Font = Enum.Font.GothamBold,
-            TextSize = 12,
+            TextSize = 15,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             AutoButtonColor = false,
             BackgroundColor3 = window.Theme.Accent,
             BorderSizePixel = 0,
-            Size = UDim2.new(1, 0, 0, 40),
+            Size = UDim2.new(1, 0, 0, 46),
             Parent = card,
         })
-        corner(actionBtn, 10)
+        corner(actionBtn, 8)
         addRipple(actionBtn, Color3.fromRGB(255, 255, 255))
 
         actionBtn.MouseEnter:Connect(function()
@@ -933,8 +1174,8 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             for opt, btn in pairs(segButtons) do
                 local active = opt == targetOption
                 tween(btn, 0.2, {
-                    BackgroundColor3 = active and window.Theme.Accent or window.Theme.Surface,
-                    BackgroundTransparency = active and 0 or 0.45,
+                    BackgroundColor3 = active and window.Theme.Accent or window.Theme.Sidebar,
+                    BackgroundTransparency = active and 0.15 or 0.6,
                 }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
                 btn.TextColor3 = active and Color3.fromRGB(255, 255, 255) or window.Theme.Muted
             end
@@ -962,33 +1203,44 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             for _, it in ipairs(items) do
                 local itemRow = make("Frame", {
                     Name = "ItemRow",
-                    Size = UDim2.new(1, 0, 0, 22),
+                    Size = UDim2.new(1, 0, 0, 24),
                     BackgroundTransparency = 1,
                     Parent = checklistContainer,
                 })
                 local hLayout = list(itemRow, 10, Enum.FillDirection.Horizontal)
                 hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
+                local checkDot = make("Frame", {
+                    Name = "CheckDot",
+                    Size = UDim2.fromOffset(20, 20),
+                    BackgroundColor3 = window.Theme.Success,
+                    BackgroundTransparency = 0.85,
+                    BorderSizePixel = 0,
+                    Parent = itemRow,
+                })
+                corner(checkDot, 10)
+                stroke(checkDot, window.Theme.Success, 1, 0.5)
+
                 make("TextLabel", {
                     Name = "Checkmark",
                     Text = "✓",
                     Font = Enum.Font.GothamBold,
-                    TextSize = 13.5,
+                    TextSize = 12,
                     TextColor3 = window.Theme.Success,
                     BackgroundTransparency = 1,
-                    Size = UDim2.fromOffset(16, 20),
-                    Parent = itemRow,
+                    Size = UDim2.fromScale(1, 1),
+                    Parent = checkDot,
                 })
 
                 make("TextLabel", {
                     Name = "ItemText",
                     Text = tostring(it),
                     Font = Enum.Font.GothamMedium,
-                    TextSize = 11,
+                    TextSize = 13,
                     TextColor3 = window.Theme.Text,
                     TextXAlignment = Enum.TextXAlignment.Left,
                     BackgroundTransparency = 1,
-                    Size = UDim2.new(1, -26, 1, 0),
+                    Size = UDim2.new(1, -34, 1, 0),
                     Parent = itemRow,
                 })
             end
@@ -1027,16 +1279,16 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 Name = "Segment_" .. tostring(opt),
                 Text = tostring(opt),
                 Font = Enum.Font.GothamBold,
-                TextSize = 11.5,
+                TextSize = 13,
                 TextColor3 = opt == selected and Color3.fromRGB(255, 255, 255) or window.Theme.Muted,
                 AutoButtonColor = false,
-                BackgroundColor3 = opt == selected and window.Theme.Accent or window.Theme.Surface,
-                BackgroundTransparency = opt == selected and 0 or 0.45,
+                BackgroundColor3 = opt == selected and window.Theme.Accent or window.Theme.Sidebar,
+                BackgroundTransparency = opt == selected and 0.15 or 0.6,
                 BorderSizePixel = 0,
                 Size = UDim2.new(btnWidth, -4, 1, 0),
                 Parent = segRow,
             })
-            corner(btn, 9)
+            corner(btn, 8)
             addRipple(btn, Color3.fromRGB(255, 255, 255))
             segButtons[opt] = btn
 
@@ -1067,47 +1319,47 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             Size = UDim2.new(1, 0, 0, 0),
             AutomaticSize = Enum.AutomaticSize.Y,
             BackgroundColor3 = window.Theme.Surface,
-            BackgroundTransparency = 0.06,
+            BackgroundTransparency = 0.25,
             BorderSizePixel = 0,
             LayoutOrder = 10,
             Parent = scroll,
         })
-        corner(card, 14)
-        stroke(card, window.Theme.Stroke, 1, 0.3)
-        padding(card, 16, 16, 16, 16)
-        list(card, 12)
+        corner(card, 12)
+        stroke(card, window.Theme.StrokeSoft, 1, 0.65)
+        padding(card, 18, 16, 18, 16)
+        list(card, 14)
 
         local headerRow = make("Frame", {
             Name = "HeaderRow",
-            Size = UDim2.new(1, 0, 0, 28),
+            Size = UDim2.new(1, 0, 0, 32),
             BackgroundTransparency = 1,
             Parent = card,
         })
-        createText(headerRow, "CardTitle", title, 14, window.Theme.Text, true)
+        createText(headerRow, "CardTitle", title, 16, window.Theme.Text, true)
 
         if badge ~= "" then
             local badgePill = make("Frame", {
                 Name = "BadgePill",
                 AnchorPoint = Vector2.new(1, 0.5),
                 Position = UDim2.new(1, 0, 0.5, 0),
-                Size = UDim2.fromOffset(0, 24),
+                Size = UDim2.fromOffset(0, 26),
                 AutomaticSize = Enum.AutomaticSize.X,
                 BackgroundColor3 = window.Theme.AccentSoft,
                 BorderSizePixel = 0,
                 Parent = headerRow,
             })
-            corner(badgePill, 8)
-            padding(badgePill, 10, 2, 10, 2)
-            stroke(badgePill, window.Theme.Accent, 1, 0.4)
+            corner(badgePill, 6)
+            padding(badgePill, 10, 0, 10, 0)
+            stroke(badgePill, window.Theme.Accent, 1, 0.5)
 
             make("TextLabel", {
                 Name = "BadgeText",
                 Text = badge,
                 Font = Enum.Font.GothamBold,
-                TextSize = 10,
+                TextSize = 11,
                 TextColor3 = window.Theme.Accent,
                 BackgroundTransparency = 1,
-                Size = UDim2.fromOffset(0, 20),
+                Size = UDim2.fromOffset(0, 26),
                 AutomaticSize = Enum.AutomaticSize.X,
                 Parent = badgePill,
             })
@@ -1116,33 +1368,44 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
         for _, it in ipairs(items) do
             local itemRow = make("Frame", {
                 Name = "ItemRow",
-                Size = UDim2.new(1, 0, 0, 22),
+                Size = UDim2.new(1, 0, 0, 24),
                 BackgroundTransparency = 1,
                 Parent = card,
             })
             local hLayout = list(itemRow, 10, Enum.FillDirection.Horizontal)
             hLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
+            local checkDot = make("Frame", {
+                Name = "CheckDot",
+                Size = UDim2.fromOffset(20, 20),
+                BackgroundColor3 = window.Theme.Success,
+                BackgroundTransparency = 0.85,
+                BorderSizePixel = 0,
+                Parent = itemRow,
+            })
+            corner(checkDot, 10)
+            stroke(checkDot, window.Theme.Success, 1, 0.5)
+
             make("TextLabel", {
                 Name = "Checkmark",
                 Text = "✓",
                 Font = Enum.Font.GothamBold,
-                TextSize = 13.5,
+                TextSize = 12,
                 TextColor3 = window.Theme.Success,
                 BackgroundTransparency = 1,
-                Size = UDim2.fromOffset(16, 20),
-                Parent = itemRow,
+                Size = UDim2.fromScale(1, 1),
+                Parent = checkDot,
             })
 
             make("TextLabel", {
                 Name = "ItemText",
                 Text = tostring(it),
                 Font = Enum.Font.GothamMedium,
-                TextSize = 11,
+                TextSize = 13,
                 TextColor3 = window.Theme.Text,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, -26, 1, 0),
+                Size = UDim2.new(1, -34, 1, 0),
                 Parent = itemRow,
             })
         end
@@ -1152,15 +1415,15 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 Name = "ActionButton",
                 Text = buttonText,
                 Font = Enum.Font.GothamBold,
-                TextSize = 12,
+                TextSize = 15,
                 TextColor3 = Color3.fromRGB(255, 255, 255),
                 AutoButtonColor = false,
                 BackgroundColor3 = window.Theme.Accent,
                 BorderSizePixel = 0,
-                Size = UDim2.new(1, 0, 0, 40),
+                Size = UDim2.new(1, 0, 0, 46),
                 Parent = card,
             })
-            corner(actionBtn, 10)
+            corner(actionBtn, 8)
             addRipple(actionBtn, Color3.fromRGB(255, 255, 255))
 
             actionBtn.MouseEnter:Connect(function()
@@ -1189,15 +1452,15 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             Name = "SearchContainer",
             Size = UDim2.new(1, 0, 0, 48),
             BackgroundColor3 = window.Theme.Surface,
-            BackgroundTransparency = 0.06,
+            BackgroundTransparency = 0.3,
             BorderSizePixel = 0,
             LayoutOrder = props.Order or 1,
             Parent = scroll,
         })
-        corner(container, 12)
-        stroke(container, window.Theme.Stroke, 1, 0.3)
+        corner(container, 10)
+        local searchStroke = stroke(container, window.Theme.StrokeSoft, 1, 0.7)
 
-        local searchIcon = createIcon(container, "Search", 16, window.Theme.Accent, 0.1)
+        local searchIcon = createIcon(container, "Search", 18, window.Theme.Muted, 0)
         searchIcon.AnchorPoint = Vector2.new(0, 0.5)
         searchIcon.Position = UDim2.new(0, 14, 0.5, 0)
 
@@ -1206,13 +1469,13 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             Text = "",
             PlaceholderText = placeholder,
             Font = Enum.Font.GothamMedium,
-            TextSize = 11.5,
+            TextSize = 13,
             TextColor3 = window.Theme.Text,
             PlaceholderColor3 = window.Theme.Muted,
             TextXAlignment = Enum.TextXAlignment.Left,
             BackgroundTransparency = 1,
             Position = UDim2.fromOffset(42, 0),
-            Size = UDim2.new(1, -54, 1, 0),
+            Size = UDim2.new(1, -56, 1, 0),
             Parent = container,
         })
 
@@ -1221,6 +1484,13 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 textBox:ReleaseFocus()
                 return
             end
+            tween(searchStroke, 0.15, { Color = window.Theme.Accent, Transparency = 0.3 })
+            tween(searchIcon, 0.15, { ImageColor3 = window.Theme.Accent })
+        end)
+
+        textBox.FocusLost:Connect(function()
+            tween(searchStroke, 0.15, { Color = window.Theme.StrokeSoft, Transparency = 0.7 })
+            tween(searchIcon, 0.15, { ImageColor3 = window.Theme.Muted })
         end)
 
         textBox:GetPropertyChangedSignal("Text"):Connect(function()
@@ -1240,18 +1510,55 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
         local max = tonumber(props.Max) or 100
         local value = tonumber(props.Value) or min
         local callback = props.Callback or function() end
-        local row = createCoreRow(window, scroll, tostring(props.Title or "Slider"), props.Desc or "", props.Image or "", props.Height or 68)
+        local sliderWidth = props.Width or 135
+
+        -- Reserve sliderWidth + 18px so title & desc have plenty of width on the left
+        local row = createCoreRow(window, scroll, tostring(props.Title or "Slider"), props.Desc or "", props.Image or "", props.Height or (props.Desc and 68 or 52), sliderWidth + 18)
+
+        local sliderWrap = make("Frame", {
+            Name = "SliderWrap",
+            AnchorPoint = Vector2.new(1, 0.5),
+            Position = UDim2.new(1, -14, 0.5, 0),
+            Size = UDim2.fromOffset(sliderWidth, 38),
+            BackgroundTransparency = 1,
+            Parent = row,
+        })
+
+        local numberPill = make("Frame", {
+            Name = "NumberPill",
+            AnchorPoint = Vector2.new(1, 0),
+            Position = UDim2.new(1, 0, 0, 0),
+            Size = UDim2.fromOffset(48, 20),
+            BackgroundColor3 = window.Theme.Sidebar,
+            BackgroundTransparency = 0.3,
+            BorderSizePixel = 0,
+            Parent = sliderWrap,
+        })
+        corner(numberPill, 6)
+        stroke(numberPill, window.Theme.StrokeSoft, 1, 0.8)
+
+        local numberLabel = make("TextLabel", {
+            Name = "Number",
+            Text = tostring(value),
+            Font = Enum.Font.GothamBold,
+            TextSize = 13,
+            TextColor3 = window.Theme.Accent,
+            TextXAlignment = Enum.TextXAlignment.Center,
+            BackgroundTransparency = 1,
+            Size = UDim2.fromScale(1, 1),
+            Parent = numberPill,
+        })
 
         local bar = make("Frame", {
             Name = "Bar",
-            AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -16, 0.5, 10),
-            Size = UDim2.fromOffset(props.Width or 160, 6),
-            BackgroundColor3 = window.Theme.StrokeSoft,
+            AnchorPoint = Vector2.new(0, 1),
+            Position = UDim2.new(0, 0, 1, -2),
+            Size = UDim2.new(1, 0, 0, 7),
+            BackgroundColor3 = window.Theme.Sidebar,
             BorderSizePixel = 0,
-            Parent = row,
+            Parent = sliderWrap,
         })
-        corner(bar, 3)
+        corner(bar, 4)
 
         local fill = make("Frame", {
             Name = "Fill",
@@ -1260,27 +1567,26 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
             BorderSizePixel = 0,
             Parent = bar,
         })
-        corner(fill, 3)
+        corner(fill, 4)
 
-        local numberLabel = make("TextLabel", {
-            Name = "Number",
-            Text = tostring(value),
-            Font = Enum.Font.GothamBold,
-            TextSize = 11.5,
-            TextColor3 = window.Theme.Accent,
-            TextXAlignment = Enum.TextXAlignment.Right,
-            BackgroundTransparency = 1,
-            AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -16, 0.5, -10),
-            Size = UDim2.fromOffset(100, 16),
-            Parent = row,
+        local knob = make("Frame", {
+            Name = "Knob",
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(1, 0, 0.5, 0),
+            Size = UDim2.fromOffset(16, 16),
+            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+            BorderSizePixel = 0,
+            Parent = fill,
         })
+        corner(knob, 8)
+        stroke(knob, window.Theme.Accent, 2, 0.2)
 
         local dragging = false
         local function setValueFromAlpha(alpha: number, fire: boolean?)
             alpha = math.clamp(alpha, 0, 1)
             value = math.floor((min + ((max - min) * alpha)) + 0.5)
-            fill.Size = UDim2.fromScale((value - min) / math.max(max - min, 1), 1)
+            local fillRatio = (value - min) / math.max(max - min, 1)
+            fill.Size = UDim2.fromScale(fillRatio, 1)
             numberLabel.Text = tostring(value)
             if fire then callback(value) end
         end
@@ -1322,28 +1628,29 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
     function api:Textbox(props: { [string]: any })
         props = props or {}
         local callback = props.Callback or function() end
-        local row = createCoreRow(window, scroll, tostring(props.Title or "Textbox"), props.Desc or "", props.Image or "Textbox", props.Height or 62)
+        local boxWidth = props.Width or 125
+        local row = createCoreRow(window, scroll, tostring(props.Title or "Textbox"), props.Desc or "", props.Image or "Textbox", props.Height or (props.Desc and 68 or 52), boxWidth + 18)
 
         local box = make("TextBox", {
             Name = "Input",
             Text = tostring(props.Value or ""),
             PlaceholderText = tostring(props.Placeholder or "Enter text"),
             Font = Enum.Font.GothamMedium,
-            TextSize = 11.5,
+            TextSize = 12,
             TextColor3 = window.Theme.Text,
             PlaceholderColor3 = window.Theme.Muted,
             TextXAlignment = Enum.TextXAlignment.Left,
             ClearTextOnFocus = props.ClearTextOnFocus == true or props.ClearText == true,
             BackgroundColor3 = window.Theme.Sidebar,
-            BackgroundTransparency = 0.1,
+            BackgroundTransparency = 0.35,
             BorderSizePixel = 0,
             AnchorPoint = Vector2.new(1, 0.5),
-            Position = UDim2.new(1, -16, 0.5, 0),
-            Size = UDim2.fromOffset(props.Width or 150, 32),
+            Position = UDim2.new(1, -14, 0.5, 0),
+            Size = UDim2.fromOffset(boxWidth, 32),
             Parent = row,
         })
-        corner(box, 9)
-        local boxStroke = stroke(box, window.Theme.StrokeSoft, 1, 0.3)
+        corner(box, 8)
+        local boxStroke = stroke(box, window.Theme.StrokeSoft, 1, 0.75)
         padding(box, 12, 0, 12, 0)
 
         box.Focused:Connect(function()
@@ -1351,10 +1658,10 @@ local function createPageApi(window: any, scroll: ScrollingFrame)
                 box:ReleaseFocus()
                 return
             end
-            tween(boxStroke, 0.16, { Color = window.Theme.Accent, Transparency = 0.05 })
+            tween(boxStroke, 0.16, { Color = window.Theme.Accent, Transparency = 0.3 })
         end)
         box.FocusLost:Connect(function(enterPressed)
-            tween(boxStroke, 0.16, { Color = window.Theme.StrokeSoft, Transparency = 0.3 })
+            tween(boxStroke, 0.16, { Color = window.Theme.StrokeSoft, Transparency = 0.75 })
             if props.IsPrem ~= false then
                 callback(box.Text, enterPressed)
             end
@@ -1375,14 +1682,16 @@ end
 function Library:Window(props: { [string]: any })
     props = props or {}
     local self = setmetatable({}, Library)
-    self.ThemeName = (type(props.Theme) == "string" and props.Theme) or "SkyBlue"
-    self.Theme = resolveTheme(props.Theme or "SkyBlue")
+    self.ThemeName = (type(props.Theme) == "string" and props.Theme) or "CyberNeon"
+    self.Theme = resolveTheme(props.Theme or "CyberNeon")
     self.Tabs = {}
     self.SelectedTab = nil
     self.Keybind = (props.Config and props.Config.Keybind) or props.Keybind or Enum.KeyCode.RightControl
+    self.ManualScale = nil
+    self.DeviceType = detectDeviceType()
 
     local appTitle = tostring(props.Title or "CYBERFLOW // v2.0")
-    local guiName = props.Name or "SkyBlueUI_Window"
+    local guiName = props.Name or "CyberNeon_Window"
     local existing = getParentGui():FindFirstChild(guiName)
     if existing then existing:Destroy() end
 
@@ -1404,16 +1713,51 @@ function Library:Window(props: { [string]: any })
         Name = "Shadow",
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
-        Size = (props.Config and props.Config.Size) or props.Size or UDim2.fromOffset(720, 500),
+        Size = (props.Config and props.Config.Size) or props.Size or UDim2.fromOffset(800, 540),
         BackgroundTransparency = 1,
         Image = Library.Assets.Shadow,
-        ImageColor3 = Color3.fromRGB(0, 110, 255),
-        ImageTransparency = 0.35,
+        ImageColor3 = Color3.fromRGB(0, 0, 0),
+        ImageTransparency = 0.4,
         ScaleType = Enum.ScaleType.Slice,
         SliceCenter = Rect.new(10, 10, 118, 118),
         Parent = screenGui,
     })
     self.Shadow = shadow
+
+    -- Responsive Mobile / Tablet / Desktop UIScale
+    local uiScale = make("UIScale", {
+        Scale = 1,
+        Parent = shadow,
+    })
+    self.UIScale = uiScale
+
+    local function updateDeviceScale()
+        local camera = workspace.CurrentCamera
+        if not camera then return end
+        local vp = camera.ViewportSize
+        local topInset = getTopInset()
+        self.DeviceType = detectDeviceType()
+
+        local finalScale = self.ManualScale or calculateDeviceScale(self.DeviceType, vp, topInset)
+        uiScale.Scale = finalScale
+        clampWindowPosition(shadow, uiScale)
+    end
+
+    local camera = workspace.CurrentCamera
+    if camera then
+        camera:GetPropertyChangedSignal("ViewportSize"):Connect(updateDeviceScale)
+        task.spawn(updateDeviceScale)
+    end
+
+    -- Allow manual scale customization or resetting back to automatic
+    function self:SetScale(newScale: number?)
+        self.ManualScale = newScale
+        updateDeviceScale()
+    end
+
+    function self:GetDeviceType(): string
+        return self.DeviceType
+    end
 
     local root = make("Frame", {
         Name = "WindowRoot",
@@ -1425,36 +1769,194 @@ function Library:Window(props: { [string]: any })
         ClipsDescendants = true,
         Parent = shadow,
     })
-    corner(root, 16)
-    stroke(root, self.Theme.Stroke, 1.3, 0.15)
+    corner(root, 14)
+
+    -- Animated Dynamic Gradient Border Stroke
+    local rootStroke = stroke(root, Color3.fromRGB(255, 255, 255), 1.5, 0.15)
+    rootStroke.Name = "AnimatedBorderStroke"
+    local borderGradient = make("UIGradient", {
+        Name = "BorderGradient",
+        Color = props.BorderGradient or createDefaultBorderSequence(self.Theme),
+        Rotation = 0,
+        Parent = rootStroke,
+    })
+    self.BorderGradient = borderGradient
+    self.BorderStroke = rootStroke
+    self.CustomBorderGradient = props.BorderGradient ~= nil
+
+    -- Animated Multi-Layer Frosted Glass Background
+    local bgLayer = make("Frame", {
+        Name = "BackgroundLayer",
+        Size = UDim2.fromScale(1, 1),
+        BackgroundColor3 = self.Theme.Background,
+        BorderSizePixel = 0,
+        ZIndex = 1,
+        ClipsDescendants = true,
+        Parent = root,
+    })
+    corner(bgLayer, 14)
+
+    local bgGradient = make("UIGradient", {
+        Name = "AnimatedBgGradient",
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, self.Theme.Background),
+            ColorSequenceKeypoint.new(0.35, self.Theme.Sidebar),
+            ColorSequenceKeypoint.new(0.70, Color3.fromRGB(18, 20, 32)),
+            ColorSequenceKeypoint.new(1.00, self.Theme.Background),
+        }),
+        Rotation = 45,
+        Parent = bgLayer,
+    })
+    self.BgGradient = bgGradient
+
+    local bgImage = make("ImageLabel", {
+        Name = "BackgroundImage",
+        Size = UDim2.fromScale(1, 1),
+        BackgroundTransparency = 1,
+        ScaleType = Enum.ScaleType.Crop,
+        Image = normalizeAsset(props.BackgroundImage or props.Image or "82941526973068"),
+        ImageTransparency = props.BackgroundImageTransparency or props.ImageTransparency or 0.82,
+        ImageColor3 = props.BackgroundImageColor or Color3.fromRGB(255, 255, 255),
+        ZIndex = 1,
+        Parent = bgLayer,
+    })
+    self.BackgroundImage = bgImage
+
+    -- Moving / Animated dynamic wave gradient on the background image itself
+    local imgGradient = make("UIGradient", {
+        Name = "MovingImageGradient",
+        Color = props.BackgroundImageGradient or ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(130, 150, 195)),
+            ColorSequenceKeypoint.new(0.35, Color3.fromRGB(255, 255, 255)),
+            ColorSequenceKeypoint.new(0.65, self.Theme.Accent),
+            ColorSequenceKeypoint.new(0.85, Color3.fromRGB(168, 85, 247)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(130, 150, 195)),
+        }),
+        Rotation = 35,
+        Offset = Vector2.new(-1, 0),
+        Parent = bgImage,
+    })
+    self.ImageGradient = imgGradient
+
+    local ambientGlow = make("ImageLabel", {
+        Name = "AmbientGlow",
+        AnchorPoint = Vector2.new(0.5, 0.2),
+        Position = UDim2.fromScale(0.5, 0.2),
+        Size = UDim2.fromScale(1.4, 0.8),
+        BackgroundTransparency = 1,
+        Image = Library.Assets.Shadow,
+        ImageColor3 = self.Theme.Accent,
+        ImageTransparency = 0.88,
+        ScaleType = Enum.ScaleType.Fit,
+        ZIndex = 1,
+        Parent = bgLayer,
+    })
+    self.AmbientGlow = ambientGlow
+
+    -- Animated Border & Background Engine
+    local borderAnimationActive = (props.BorderAnimation ~= false)
+    local backgroundAnimationActive = (props.BackgroundAnimation ~= false)
+    local borderSpeed = props.BorderSpeed or 60
+    local bgTime = 0
+
+    local animConn: RBXScriptConnection? = nil
+    animConn = RunService.RenderStepped:Connect(function(dt)
+        if not screenGui.Parent then
+            if animConn then
+                animConn:Disconnect()
+                animConn = nil
+            end
+            return
+        end
+
+        if borderAnimationActive and borderGradient and borderGradient.Parent then
+            borderGradient.Rotation = (borderGradient.Rotation + dt * borderSpeed) % 360
+        end
+
+        if backgroundAnimationActive then
+            bgTime = bgTime + dt
+            -- Dynamic moving wave sweep across the background image
+            if imgGradient and imgGradient.Parent then
+                local waveOffset = -1 + ((bgTime * 0.35) % 2)
+                imgGradient.Offset = Vector2.new(waveOffset, math.sin(bgTime * 0.6) * 0.12)
+                imgGradient.Rotation = 35 + math.sin(bgTime * 0.4) * 12
+            end
+
+            -- Ambient moving gradient rotation and offset
+            if bgGradient and bgGradient.Parent then
+                bgGradient.Rotation = (bgGradient.Rotation + dt * 18) % 360
+                bgGradient.Offset = Vector2.new(math.sin(bgTime * 0.5) * 0.18, math.cos(bgTime * 0.4) * 0.18)
+            end
+            if ambientGlow and ambientGlow.Parent then
+                ambientGlow.ImageTransparency = 0.86 + (math.sin(bgTime * 1.4) * 0.06)
+            end
+        end
+    end)
+    self.AnimConnection = animConn
+
+    function self:SetBorderAnimation(enabled: boolean, speed: number?)
+        borderAnimationActive = enabled
+        if speed then borderSpeed = speed end
+    end
+
+    function self:SetBorderGradient(seq: ColorSequence?)
+        if seq then
+            self.CustomBorderGradient = true
+            borderGradient.Color = seq
+        else
+            self.CustomBorderGradient = false
+            borderGradient.Color = createDefaultBorderSequence(self.Theme)
+        end
+    end
+
+    function self:SetBackgroundImage(asset: string, transparency: number?)
+        bgImage.Image = normalizeAsset(asset)
+        if transparency then
+            bgImage.ImageTransparency = transparency
+        end
+        bgImage.Visible = (asset ~= "")
+    end
+
+    function self:SetBackgroundAnimation(enabled: boolean)
+        backgroundAnimationActive = enabled
+    end
+
     self.Root = root
 
-    -- Floating Moveable Open/Restore Button (when UI is hidden)
+    local topGlow = make("Frame", {
+        Name = "TopGlow",
+        Position = UDim2.new(0, 0, 0, 0),
+        Size = UDim2.new(1, 0, 0, 1),
+        BackgroundColor3 = self.Theme.Accent,
+        BackgroundTransparency = 0.6,
+        BorderSizePixel = 0,
+        Parent = root,
+    })
+
     local floatingOpenBtn = make("ImageButton", {
         Name = "FloatingOpenButton",
         AnchorPoint = Vector2.new(0, 0.5),
-        Position = UDim2.new(0, 20, 0.5, 0),
-        Size = UDim2.fromOffset(46, 46),
+        Position = UDim2.new(0, 24, 0.5, 0),
+        Size = UDim2.fromOffset(54, 54),
         BackgroundColor3 = self.Theme.Surface,
-        BackgroundTransparency = 0.1,
+        BackgroundTransparency = 0.2,
         BorderSizePixel = 0,
-        Image = normalizeAsset("ImageLogo"),
-        ImageColor3 = self.Theme.Accent,
+        Image = normalizeAsset(props.FloatingIcon or "89839278613299"),
+        ImageColor3 = (tostring(props.Icon or "autohub_icon.png"):find("%.png") or tostring(props.Icon or "autohub_icon.png"):find("%.jpg")) and Color3.fromRGB(255, 255, 255) or self.Theme.Accent,
         Visible = false,
         ZIndex = 200,
         Parent = screenGui,
     })
-    corner(floatingOpenBtn, 23)
-    stroke(floatingOpenBtn, self.Theme.Stroke, 1.5, 0.2)
+    corner(floatingOpenBtn, 27)
+    stroke(floatingOpenBtn, self.Theme.Accent, 1, 0.4)
     addRipple(floatingOpenBtn, self.Theme.Accent)
-    bindDrag(floatingOpenBtn, floatingOpenBtn)
+    bindDrag(floatingOpenBtn, floatingOpenBtn, nil)
 
-    -- Confirmation Exit Popup Modal
     local confirmOverlay = make("Frame", {
         Name = "ConfirmOverlay",
         Size = UDim2.fromScale(1, 1),
         BackgroundColor3 = Color3.fromRGB(0, 0, 0),
-        BackgroundTransparency = 0.6,
+        BackgroundTransparency = 0.65,
         Visible = false,
         ZIndex = 300,
         Parent = root,
@@ -1464,96 +1966,180 @@ function Library:Window(props: { [string]: any })
         Name = "ConfirmModal",
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.5),
-        Size = UDim2.fromOffset(280, 140),
+        Size = UDim2.fromOffset(320, 160),
         BackgroundColor3 = self.Theme.Sidebar,
         BorderSizePixel = 0,
         ZIndex = 301,
         Parent = confirmOverlay,
     })
-    corner(confirmModal, 14)
-    stroke(confirmModal, self.Theme.Stroke, 1.5, 0.1)
-    padding(confirmModal, 16, 16, 16, 16)
+    corner(confirmModal, 12)
+    stroke(confirmModal, self.Theme.StrokeSoft, 1, 0.5)
+    padding(confirmModal, 20, 20, 20, 20)
     list(confirmModal, 12)
 
-    createText(confirmModal, "ModalTitle", "Confirm Exit", 13.5, self.Theme.Text, true, 1)
-    createText(confirmModal, "ModalDesc", "Are you sure you want to close this UI?", 10.5, self.Theme.Muted, false, 2)
+    createText(confirmModal, "ModalTitle", "Confirm Exit", 17, self.Theme.Text, true, 1)
+    createText(confirmModal, "ModalDesc", "Are you sure you want to close this UI?", 14, self.Theme.Muted, false, 2)
 
     local modalBtnRow = make("Frame", {
         Name = "ModalBtnRow",
-        Size = UDim2.new(1, 0, 0, 36),
+        Size = UDim2.new(1, 0, 0, 40),
         BackgroundTransparency = 1,
         LayoutOrder = 3,
         Parent = confirmModal,
     })
-    list(modalBtnRow, 10, Enum.FillDirection.Horizontal)
+    list(modalBtnRow, 12, Enum.FillDirection.Horizontal)
 
     local cancelBtn = make("TextButton", {
         Name = "CancelBtn",
         Text = "Cancel",
         Font = Enum.Font.GothamBold,
-        TextSize = 11,
+        TextSize = 14,
         TextColor3 = self.Theme.Text,
         AutoButtonColor = false,
         BackgroundColor3 = self.Theme.Surface,
-        BackgroundTransparency = 0.2,
+        BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
-        Size = UDim2.new(0.5, -5, 1, 0),
+        Size = UDim2.new(0.5, -6, 1, 0),
         Parent = modalBtnRow,
     })
     corner(cancelBtn, 8)
-    stroke(cancelBtn, self.Theme.StrokeSoft, 1, 0.3)
+    stroke(cancelBtn, self.Theme.StrokeSoft, 1, 0.7)
     addRipple(cancelBtn, self.Theme.Muted)
 
     local confirmBtn = make("TextButton", {
         Name = "ConfirmBtn",
         Text = "Exit",
         Font = Enum.Font.GothamBold,
-        TextSize = 11,
+        TextSize = 14,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         AutoButtonColor = false,
         BackgroundColor3 = self.Theme.Danger,
         BorderSizePixel = 0,
-        Size = UDim2.new(0.5, -5, 1, 0),
+        Size = UDim2.new(0.5, -6, 1, 0),
         Parent = modalBtnRow,
     })
     corner(confirmBtn, 8)
     addRipple(confirmBtn, Color3.fromRGB(255, 255, 255))
 
     cancelBtn.MouseButton1Click:Connect(function()
-        confirmOverlay.Visible = false
+        tween(confirmOverlay, 0.15, { BackgroundTransparency = 1 })
+        local t = tween(confirmModal, 0.15, { Size = UDim2.fromOffset(250, 125) }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+        t.Completed:Connect(function()
+            confirmOverlay.Visible = false
+        end)
     end)
 
     confirmBtn.MouseButton1Click:Connect(function()
         screenGui:Destroy()
     end)
 
+    -- Window Open / Close Animation Controller
+    local isWindowVisible = true
+    local isTransitioning = false
+
+    local function getBaseScale(): number
+        local camera = workspace.CurrentCamera
+        local vp = (camera and camera.ViewportSize) or Vector2.new(1920, 1080)
+        return self.ManualScale or calculateDeviceScale(self.DeviceType, vp, getTopInset())
+    end
+
+    local function animateOpen()
+        if isTransitioning then return end
+        if shadow.Visible and isWindowVisible then return end
+        isTransitioning = true
+        isWindowVisible = true
+
+        if floatingOpenBtn.Visible then
+            local hideBtnTween = tween(floatingOpenBtn, 0.16, { Size = UDim2.fromOffset(0, 0) }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+            hideBtnTween.Completed:Connect(function()
+                floatingOpenBtn.Visible = false
+            end)
+        end
+
+        local targetScale = getBaseScale()
+        clampWindowPosition(shadow, uiScale)
+
+        shadow.Visible = true
+        uiScale.Scale = targetScale * 0.85
+        local basePos = shadow.Position
+        shadow.Position = UDim2.new(basePos.X.Scale, basePos.X.Offset, basePos.Y.Scale, basePos.Y.Offset + 18)
+
+        local scaleAnim = tween(uiScale, 0.30, { Scale = targetScale }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+        local posAnim = tween(shadow, 0.30, { Position = basePos }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+
+        scaleAnim.Completed:Connect(function()
+            uiScale.Scale = targetScale
+            shadow.Position = basePos
+            clampWindowPosition(shadow, uiScale)
+            isTransitioning = false
+        end)
+    end
+
+    local function animateClose(showFloating: boolean?)
+        if isTransitioning then return end
+        if not shadow.Visible and not isWindowVisible then return end
+        isTransitioning = true
+        isWindowVisible = false
+
+        local targetScale = getBaseScale()
+        local basePos = shadow.Position
+        local targetPos = UDim2.new(basePos.X.Scale, basePos.X.Offset, basePos.Y.Scale, basePos.Y.Offset + 16)
+
+        local scaleAnim = tween(uiScale, 0.22, { Scale = targetScale * 0.82 }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+        local posAnim = tween(shadow, 0.22, { Position = targetPos }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
+
+        scaleAnim.Completed:Connect(function()
+            shadow.Visible = false
+            shadow.Position = basePos
+            uiScale.Scale = targetScale
+            isTransitioning = false
+
+            if showFloating ~= false then
+                floatingOpenBtn.Visible = true
+                floatingOpenBtn.Size = UDim2.fromOffset(0, 0)
+                tween(floatingOpenBtn, 0.25, { Size = UDim2.fromOffset(54, 54) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+            end
+        end)
+    end
+
+    local function toggleVisibility()
+        if isWindowVisible then
+            animateClose(true)
+        else
+            animateOpen()
+        end
+    end
+
     local resizeHandle = make("ImageButton", {
         Name = "ResizeHandle",
         AnchorPoint = Vector2.new(1, 1),
-        Position = UDim2.new(1, -4, 1, -4),
-        Size = UDim2.fromOffset(16, 16),
+        Position = UDim2.new(1, -6, 1, -6),
+        Size = UDim2.fromOffset(20, 20),
         BackgroundTransparency = 1,
         Image = Library.Assets.Resize,
         ImageColor3 = self.Theme.Muted,
-        ImageTransparency = 0.4,
+        ImageTransparency = 0.5,
         ZIndex = 100,
         Parent = shadow,
     })
-    bindResize(resizeHandle, shadow, Vector2.new(520, 380))
+    bindResize(resizeHandle, shadow, Vector2.new(620, 420), uiScale)
 
     resizeHandle.MouseEnter:Connect(function()
-        tween(resizeHandle, 0.15, { ImageTransparency = 0, ImageColor3 = self.Theme.Accent })
+        tween(resizeHandle, 0.15, { ImageTransparency = 0.1, ImageColor3 = self.Theme.Accent })
     end)
     resizeHandle.MouseLeave:Connect(function()
-        tween(resizeHandle, 0.15, { ImageTransparency = 0.4, ImageColor3 = self.Theme.Muted })
+        tween(resizeHandle, 0.15, { ImageTransparency = 0.5, ImageColor3 = self.Theme.Muted })
     end)
 
-    local sidebarWidth = 200
+    local sidebarWidth = 195
     local sidebar = make("Frame", {
         Name = "Sidebar",
         Size = UDim2.new(0, sidebarWidth, 1, 0),
         BackgroundColor3 = self.Theme.Sidebar,
+        BackgroundTransparency = 0.25,
         BorderSizePixel = 0,
+        ClipsDescendants = true,
+        ZIndex = 5,
         Parent = root,
     })
     self.Sidebar = sidebar
@@ -1564,81 +2150,105 @@ function Library:Window(props: { [string]: any })
         Position = UDim2.new(1, 0, 0, 0),
         Size = UDim2.new(0, 1, 1, 0),
         BackgroundColor3 = self.Theme.StrokeSoft,
+        BackgroundTransparency = 0.7,
         BorderSizePixel = 0,
         Parent = sidebar,
     })
 
     local sideHeader = make("Frame", {
         Name = "SideHeader",
-        Size = UDim2.new(1, 0, 0, 60),
+        Size = UDim2.new(1, 0, 0, 68),
         BackgroundTransparency = 1,
+        ClipsDescendants = true,
         Parent = sidebar,
     })
-    bindDrag(sideHeader, shadow)
+    bindDrag(sideHeader, shadow, uiScale)
 
     local sideLogoWrap = make("Frame", {
         Name = "SideLogoWrap",
-        Position = UDim2.fromOffset(16, 16),
-        Size = UDim2.fromOffset(28, 28),
-        BackgroundTransparency = 1,
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, 12, 0.5, 0),
+        Size = UDim2.fromOffset(32, 32),
+        BackgroundColor3 = self.Theme.Surface,
+        BackgroundTransparency = 0.3,
+        BorderSizePixel = 0,
         Parent = sideHeader,
     })
-    local sideLogo = createIcon(sideLogoWrap, props.Icon or "ImageLogo", 22, self.Theme.Accent, 0)
+    corner(sideLogoWrap, 8)
+    stroke(sideLogoWrap, self.Theme.Accent, 1, 0.5)
+
+    -- Guaranteed non-blank icon with built-in fallback
+    local iconTarget = props.Icon or "autohub_icon.png"
+    local resolvedIcon = normalizeAsset(iconTarget)
+    if resolvedIcon == "" or resolvedIcon == "autohub_icon.png" then
+        resolvedIcon = Library.Assets.ImageLogo or "rbxassetid://111362591084511"
+    end
+    local isCustomIcon = tostring(iconTarget):find("%.png") or tostring(iconTarget):find("%.jpg")
+    local iconColor = isCustomIcon and Color3.fromRGB(255, 255, 255) or self.Theme.Accent
+    local sideLogo = createIcon(sideLogoWrap, resolvedIcon, 20, iconColor, 0)
     sideLogo.AnchorPoint = Vector2.new(0.5, 0.5)
     sideLogo.Position = UDim2.fromScale(0.5, 0.5)
 
+    -- AppTitle: contained strictly within sidebar with text truncate
     local sideAppTitle = make("TextLabel", {
         Name = "AppTitle",
         Text = appTitle,
         Font = Enum.Font.GothamBold,
-        TextSize = 12.5,
+        TextSize = 14,
         TextColor3 = self.Theme.Text,
         TextXAlignment = Enum.TextXAlignment.Left,
+        TextTruncate = Enum.TextTruncate.AtEnd,
+        TextWrapped = true,
+        ClipsDescendants = true,
         BackgroundTransparency = 1,
         Position = UDim2.fromOffset(52, 0),
-        Size = UDim2.new(1, -56, 1, 0),
+        Size = UDim2.new(1, -58, 1, 0),
         Parent = sideHeader,
     })
 
     local tabContainer = make("ScrollingFrame", {
         Name = "TabContainer",
-        Position = UDim2.fromOffset(0, 60),
-        Size = UDim2.new(1, 0, 1, -150),
+        Position = UDim2.fromOffset(0, 68),
+        Size = UDim2.new(1, 0, 1, -160),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
         ScrollBarThickness = 2,
-        ScrollBarImageColor3 = self.Theme.Stroke,
+        ScrollBarImageColor3 = self.Theme.Accent,
         CanvasSize = UDim2.fromOffset(0, 0),
+        Active = true,
         Parent = sidebar,
     })
-    padding(tabContainer, 12, 10, 12, 10)
-    local tabLayout = list(tabContainer, 8)
+    padding(tabContainer, 10, 8, 10, 8)
+    local tabLayout = list(tabContainer, 6)
     updateCanvas(tabContainer, tabLayout, 10)
 
+    -- User Profile Widget
     local profileCard = make("Frame", {
         Name = "ProfileCard",
         AnchorPoint = Vector2.new(0, 1),
-        Position = UDim2.new(0, 12, 1, -12),
-        Size = UDim2.new(1, -24, 0, 72),
+        Position = UDim2.new(0, 10, 1, -10),
+        Size = UDim2.new(1, -20, 0, 74),
         BackgroundColor3 = self.Theme.Surface,
+        BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
         Parent = sidebar,
     })
-    corner(profileCard, 12)
-    stroke(profileCard, self.Theme.StrokeSoft, 1, 0.25)
-    padding(profileCard, 10, 10, 10, 10)
-    list(profileCard, 6)
+    corner(profileCard, 10)
+    stroke(profileCard, self.Theme.StrokeSoft, 1, 0.7)
+    padding(profileCard, 10, 8, 10, 8)
+    list(profileCard, 4)
 
     local pTopRow = make("Frame", {
         Name = "ProfileTop",
-        Size = UDim2.new(1, 0, 0, 34),
+        Size = UDim2.new(1, 0, 0, 36),
         BackgroundTransparency = 1,
         Parent = profileCard,
     })
 
     local pAvatarWrap = make("Frame", {
         Name = "AvatarWrap",
-        Position = UDim2.fromOffset(0, 0),
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, 0, 0.5, 0),
         Size = UDim2.fromOffset(34, 34),
         BackgroundColor3 = self.Theme.Sidebar,
         BorderSizePixel = 0,
@@ -1646,7 +2256,7 @@ function Library:Window(props: { [string]: any })
         Parent = pTopRow,
     })
     corner(pAvatarWrap, 17)
-    stroke(pAvatarWrap, self.Theme.Accent, 1, 0.25)
+    local pAvatarStroke = stroke(pAvatarWrap, self.Theme.Accent, 1, 0.4)
 
     local pAvatarImage = make("ImageLabel", {
         Name = "Avatar",
@@ -1663,40 +2273,41 @@ function Library:Window(props: { [string]: any })
         BackgroundTransparency = 1,
         Parent = pTopRow,
     })
-    list(pInfoWrap, 2)
+    local pInfoLayout = list(pInfoWrap, 2)
+    pInfoLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
     local pUsernameLabel = make("TextLabel", {
         Name = "Username",
         Text = LocalPlayer and LocalPlayer.Name or "User",
         Font = Enum.Font.GothamBold,
-        TextSize = 11,
+        TextSize = 15,
         TextColor3 = self.Theme.Text,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextTruncate = Enum.TextTruncate.AtEnd,
         BackgroundTransparency = 1,
-        Size = UDim2.new(1, 0, 0, 15),
+        Size = UDim2.new(1, 0, 0, 18),
         Parent = pInfoWrap,
     })
 
     local pBadgePill = make("Frame", {
         Name = "BadgePill",
-        Size = UDim2.fromOffset(0, 14),
+        Size = UDim2.fromOffset(0, 16),
         AutomaticSize = Enum.AutomaticSize.X,
         BackgroundColor3 = self.Theme.AccentSoft,
         BorderSizePixel = 0,
         Parent = pInfoWrap,
     })
-    corner(pBadgePill, 5)
-    padding(pBadgePill, 6, 1, 6, 1)
+    corner(pBadgePill, 4)
+    padding(pBadgePill, 6, 0, 6, 0)
 
     local pBadgeText = make("TextLabel", {
         Name = "BadgeText",
-        Text = "SKYBLUE VIP",
+        Text = "VIP ACCESS",
         Font = Enum.Font.GothamBold,
-        TextSize = 8,
+        TextSize = 10,
         TextColor3 = self.Theme.Accent,
         BackgroundTransparency = 1,
-        Size = UDim2.fromOffset(0, 12),
+        Size = UDim2.fromOffset(0, 16),
         AutomaticSize = Enum.AutomaticSize.X,
         Parent = pBadgePill,
     })
@@ -1705,11 +2316,11 @@ function Library:Window(props: { [string]: any })
         Name = "TimeLeft",
         Text = "Time left: 23h 45m",
         Font = Enum.Font.GothamMedium,
-        TextSize = 9.5,
+        TextSize = 12,
         TextColor3 = self.Theme.Muted,
         TextXAlignment = Enum.TextXAlignment.Left,
         BackgroundTransparency = 1,
-        Size = UDim2.new(1, 0, 0, 14),
+        Size = UDim2.new(1, 0, 0, 16),
         Parent = profileCard,
     })
 
@@ -1729,11 +2340,10 @@ function Library:Window(props: { [string]: any })
         }
     end
 
-    -- Fixed contentArea layout constraint starting cleanly below the topbar header
     local contentArea = make("Frame", {
         Name = "ContentArea",
-        Position = UDim2.new(0, sidebarWidth, 0, 60),
-        Size = UDim2.new(1, -sidebarWidth, 1, -60),
+        Position = UDim2.new(0, sidebarWidth, 0, 68),
+        Size = UDim2.new(1, -sidebarWidth, 1, -68),
         BackgroundTransparency = 1,
         Parent = root,
     })
@@ -1741,26 +2351,38 @@ function Library:Window(props: { [string]: any })
     local topBar = make("Frame", {
         Name = "TopBar",
         Position = UDim2.new(0, sidebarWidth, 0, 0),
-        Size = UDim2.new(1, -sidebarWidth, 0, 60),
+        Size = UDim2.new(1, -sidebarWidth, 0, 68),
         BackgroundTransparency = 1,
         Parent = root,
     })
-    bindDrag(topBar, shadow)
+    bindDrag(topBar, shadow, uiScale)
+
+    local topDivider = make("Frame", {
+        Name = "TopDivider",
+        Position = UDim2.new(0, 0, 1, -1),
+        Size = UDim2.new(1, 0, 0, 1),
+        BackgroundColor3 = self.Theme.StrokeSoft,
+        BackgroundTransparency = 0.7,
+        BorderSizePixel = 0,
+        Parent = topBar,
+    })
 
     local breadcrumbWrap = make("Frame", {
         Name = "BreadcrumbWrap",
-        Position = UDim2.fromOffset(16, 11),
-        Size = UDim2.new(1, -174, 1, -22),
+        AnchorPoint = Vector2.new(0, 0.5),
+        Position = UDim2.new(0, 18, 0.5, 0),
+        Size = UDim2.new(1, -190, 0, 42),
         BackgroundTransparency = 1,
         Parent = topBar,
     })
-    list(breadcrumbWrap, 2)
+    local bLayout = list(breadcrumbWrap, 2)
+    bLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
     local breadcrumbLabel = make("TextLabel", {
         Name = "Breadcrumb",
-        Text = string.upper(appTitle) .. " // START",
+        Text = "OVERVIEW",
         Font = Enum.Font.GothamBold,
-        TextSize = 12.5,
+        TextSize = 15,
         TextColor3 = self.Theme.Text,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextTruncate = Enum.TextTruncate.AtEnd,
@@ -1771,9 +2393,9 @@ function Library:Window(props: { [string]: any })
 
     local descLabelRef = make("TextLabel", {
         Name = "Subtitle",
-        Text = tostring(props.Desc or props.Subtitle or "SYSTEM ONLINE"),
+        Text = tostring(props.Desc or props.Subtitle or "LOBBY : System Ready"),
         Font = Enum.Font.GothamMedium,
-        TextSize = 10.5,
+        TextSize = 12,
         TextColor3 = self.Theme.Muted,
         TextXAlignment = Enum.TextXAlignment.Left,
         TextTruncate = Enum.TextTruncate.AtEnd,
@@ -1785,8 +2407,8 @@ function Library:Window(props: { [string]: any })
     local controls = make("Frame", {
         Name = "Controls",
         AnchorPoint = Vector2.new(1, 0.5),
-        Position = UDim2.new(1, -16, 0.5, 0),
-        Size = UDim2.fromOffset(156, 28),
+        Position = UDim2.new(1, -14, 0.5, 0),
+        Size = UDim2.fromOffset(156, 32),
         BackgroundTransparency = 1,
         Parent = topBar,
     })
@@ -1798,29 +2420,30 @@ function Library:Window(props: { [string]: any })
             Image = normalizeAsset(icon),
             ImageColor3 = self.Theme.Muted,
             BackgroundColor3 = self.Theme.Surface,
-            BackgroundTransparency = 0.2,
+            BackgroundTransparency = 0.4,
             BorderSizePixel = 0,
-            Size = UDim2.fromOffset(26, 26),
+            Size = UDim2.fromOffset(28, 28),
             AutoButtonColor = false,
             Parent = controls,
         })
         corner(btn, 7)
-        stroke(btn, self.Theme.StrokeSoft, 1, 0.3)
+        local btnStroke = stroke(btn, self.Theme.StrokeSoft, 1, 0.8)
 
         btn.MouseEnter:Connect(function()
-            tween(btn, 0.15, { BackgroundTransparency = 0, ImageColor3 = self.Theme.Text })
+            tween(btn, 0.15, { BackgroundTransparency = 0.1, ImageColor3 = self.Theme.Text })
+            tween(btnStroke, 0.15, { Color = self.Theme.Accent, Transparency = 0.4 })
         end)
         btn.MouseLeave:Connect(function()
-            tween(btn, 0.15, { BackgroundTransparency = 0.2, ImageColor3 = self.Theme.Muted })
+            tween(btn, 0.15, { BackgroundTransparency = 0.4, ImageColor3 = self.Theme.Muted })
+            tween(btnStroke, 0.15, { Color = self.Theme.StrokeSoft, Transparency = 0.8 })
         end)
         btn.MouseButton1Click:Connect(callback)
         return btn
     end
 
     makeTopBtn("HideBtn", "Hide", function()
-        shadow.Visible = false
-        floatingOpenBtn.Visible = true
-        self:Notify({ Title = "UI Hidden", Desc = "Click the floating icon to restore.", Duration = 2 })
+        animateClose(true)
+        self:Notify({ Title = "UI Minimized", Desc = "Click floating badge or press keybind to restore.", Duration = 2 })
     end)
 
     local minimized = false
@@ -1830,7 +2453,7 @@ function Library:Window(props: { [string]: any })
         if minimized then
             originalSize = shadow.Size
             resizeHandle.Visible = false
-            tween(shadow, 0.2, { Size = UDim2.fromOffset(originalSize.X.Offset, 60) })
+            tween(shadow, 0.2, { Size = UDim2.fromOffset(originalSize.X.Offset, 68) })
             contentArea.Visible = false
             sidebar.Visible = false
         else
@@ -1867,22 +2490,16 @@ function Library:Window(props: { [string]: any })
     end)
 
     makeTopBtn("CloseBtn", "Close", function()
+        confirmOverlay.BackgroundTransparency = 1
         confirmOverlay.Visible = true
+        confirmModal.Size = UDim2.fromOffset(250, 125)
+        tween(confirmOverlay, 0.20, { BackgroundTransparency = 0.65 })
+        tween(confirmModal, 0.25, { Size = UDim2.fromOffset(320, 160) }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
     end)
 
     floatingOpenBtn.MouseButton1Click:Connect(function()
-        floatingOpenBtn.Visible = false
-        shadow.Visible = true
+        animateOpen()
     end)
-
-    make("Frame", {
-        Name = "TopBarDivider",
-        Position = UDim2.new(0, 0, 0, 0),
-        Size = UDim2.new(1, 0, 0, 1),
-        BackgroundColor3 = self.Theme.StrokeSoft,
-        BorderSizePixel = 0,
-        Parent = contentArea,
-    })
 
     local pages = make("Frame", {
         Name = "Pages",
@@ -1897,7 +2514,7 @@ function Library:Window(props: { [string]: any })
         appTitle = newTitle
         sideAppTitle.Text = newTitle
         if self.SelectedTab then
-            breadcrumbLabel.Text = string.upper(appTitle) .. " // " .. string.upper(self.SelectedTab)
+            breadcrumbLabel.Text = string.upper(self.SelectedTab)
         end
     end
 
@@ -1913,12 +2530,31 @@ function Library:Window(props: { [string]: any })
         end
 
         root.BackgroundColor3 = self.Theme.Background
+        topGlow.BackgroundColor3 = self.Theme.Accent
+        if borderGradient and not self.CustomBorderGradient then
+            borderGradient.Color = createDefaultBorderSequence(self.Theme)
+        end
+        if bgGradient then
+            bgGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0.00, self.Theme.Background),
+                ColorSequenceKeypoint.new(0.35, self.Theme.Sidebar),
+                ColorSequenceKeypoint.new(0.70, Color3.fromRGB(18, 20, 32)),
+                ColorSequenceKeypoint.new(1.00, self.Theme.Background),
+            })
+        end
+        if ambientGlow then
+            ambientGlow.ImageColor3 = self.Theme.Accent
+        end
         sidebar.BackgroundColor3 = self.Theme.Sidebar
         sideDivider.BackgroundColor3 = self.Theme.StrokeSoft
+        topDivider.BackgroundColor3 = self.Theme.StrokeSoft
         sideLogo.ImageColor3 = self.Theme.Accent
-        pAvatarWrap.UIStroke.Color = self.Theme.Accent
+        sideLogoWrap.UIStroke.Color = self.Theme.Accent
+        pAvatarStroke.Color = self.Theme.Accent
         pBadgePill.BackgroundColor3 = self.Theme.AccentSoft
         pBadgeText.TextColor3 = self.Theme.Accent
+        floatingOpenBtn.ImageColor3 = self.Theme.Accent
+        floatingOpenBtn.UIStroke.Color = self.Theme.Accent
 
         if self.SelectedTab then
             self:SelectTab(self.SelectedTab)
@@ -1931,34 +2567,35 @@ function Library:Window(props: { [string]: any })
             
             if selected then
                 tab.Page.Visible = true
-                tab.Page.Position = UDim2.new(0, 15, 0, 0)
+                tab.Page.Position = UDim2.new(0, 10, 0, 0)
                 tab.Page.BackgroundTransparency = 1
-                tween(tab.Page, 0.25, { Position = UDim2.fromScale(0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+                tween(tab.Page, 0.22, { Position = UDim2.fromScale(0, 0) }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
             else
                 tab.Page.Visible = false
             end
 
             tween(tab.Button, 0.18, {
-                BackgroundColor3 = selected and self.Theme.AccentSoft or self.Sidebar.BackgroundColor3,
-                BackgroundTransparency = selected and 0.05 or 0.5,
+                BackgroundColor3 = selected and self.Theme.Surface or self.Sidebar.BackgroundColor3,
+                BackgroundTransparency = selected and 0.1 or 1,
             })
             if tab.Indicator then
                 tween(tab.Indicator, 0.18, {
                     BackgroundTransparency = selected and 0 or 1,
+                    Size = selected and UDim2.new(0, 3, 0.55, 0) or UDim2.new(0, 3, 0, 0),
                 })
             end
             if tab.TitleLabel then
                 tab.TitleLabel.TextColor3 = selected and self.Theme.Text or self.Theme.Muted
             end
             if tab.DescLabel then
-                tab.DescLabel.TextColor3 = selected and self.Theme.Accent or Color3.fromRGB(110, 140, 180)
+                tab.DescLabel.TextColor3 = selected and self.Theme.Accent or Color3.fromRGB(110, 125, 150)
             end
             if tab.Icon then
                 tab.Icon.ImageColor3 = selected and self.Theme.Accent or self.Theme.Muted
             end
         end
         self.SelectedTab = name
-        breadcrumbLabel.Text = string.upper(appTitle) .. " // " .. string.upper(name)
+        breadcrumbLabel.Text = string.upper(name)
     end
 
     function self:Tab(tabProps: { [string]: any })
@@ -1972,20 +2609,20 @@ function Library:Window(props: { [string]: any })
             Name = "Tab_" .. name,
             Text = "",
             AutoButtonColor = false,
-            Size = UDim2.new(1, 0, 0, 48),
+            Size = UDim2.new(1, 0, 0, 52),
             BackgroundColor3 = self.Theme.Sidebar,
-            BackgroundTransparency = 0.5,
+            BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Parent = tabContainer,
         })
-        corner(tabButton, 10)
+        corner(tabButton, 8)
         addRipple(tabButton, self.Theme.Accent)
 
         local tabIndicator = make("Frame", {
             Name = "ActiveIndicator",
             AnchorPoint = Vector2.new(0, 0.5),
-            Position = UDim2.new(0, 0, 0.5, 0),
-            Size = UDim2.new(0, 3.5, 0.7, 0),
+            Position = UDim2.new(0, 2, 0.5, 0),
+            Size = UDim2.new(0, 3, 0.55, 0),
             BackgroundColor3 = self.Theme.Accent,
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
@@ -1993,29 +2630,31 @@ function Library:Window(props: { [string]: any })
         })
         corner(tabIndicator, 2)
 
-        local tabIcon = createIcon(tabButton, tabIconAsset, 18, self.Theme.Muted, 0.1)
+        local tabIcon = createIcon(tabButton, tabIconAsset, 20, self.Theme.Muted, 0)
         tabIcon.AnchorPoint = Vector2.new(0, 0.5)
         tabIcon.Position = UDim2.new(0, 14, 0.5, 0)
 
         local textWrap = make("Frame", {
             Name = "TextWrap",
-            Position = UDim2.fromOffset(hasTabIcon and 40 or 14, 6),
-            Size = UDim2.new(1, -(hasTabIcon and 46 or 20), 1, -12),
+            AnchorPoint = Vector2.new(0, 0.5),
+            Position = UDim2.new(0, hasTabIcon and 44 or 14, 0.5, 0),
+            Size = UDim2.new(1, -(hasTabIcon and 50 or 18), 1, -8),
             BackgroundTransparency = 1,
             Parent = tabButton,
         })
-        list(textWrap, 2)
+        local tLayout = list(textWrap, 2)
+        tLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 
         local titleLabel = make("TextLabel", {
             Name = "Title",
-            Text = string.upper(name),
+            Text = name,
             Font = Enum.Font.GothamBold,
-            TextSize = 11.5,
+            TextSize = 15,
             TextColor3 = self.Theme.Muted,
             TextXAlignment = Enum.TextXAlignment.Left,
             TextTruncate = Enum.TextTruncate.AtEnd,
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 15),
+            Size = UDim2.new(1, 0, 0, 18),
             Parent = textWrap,
         })
 
@@ -2023,32 +2662,34 @@ function Library:Window(props: { [string]: any })
             Name = "Desc",
             Text = subDesc,
             Font = Enum.Font.GothamMedium,
-            TextSize = 9.5,
-            TextColor3 = Color3.fromRGB(110, 140, 180),
+            TextSize = 12,
+            TextColor3 = Color3.fromRGB(110, 125, 150),
             TextXAlignment = Enum.TextXAlignment.Left,
             TextTruncate = Enum.TextTruncate.AtEnd,
             BackgroundTransparency = 1,
-            Size = UDim2.new(1, 0, 0, 13),
+            Size = UDim2.new(1, 0, 0, 15),
             Parent = textWrap,
         })
 
         local page = make("ScrollingFrame", {
             Name = "Page_" .. name,
-            Size = UDim2.new(1, 0, 1, 0),
-            Position = UDim2.fromScale(0, 0),
+            Size = UDim2.new(1, -4, 1, -6),
+            Position = UDim2.fromOffset(0, 0),
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
             AutomaticCanvasSize = Enum.AutomaticSize.None,
             ScrollingDirection = Enum.ScrollingDirection.Y,
-            ScrollBarThickness = 4,
+            ScrollBarThickness = 2,
             ScrollBarImageColor3 = self.Theme.Accent,
+            ScrollBarImageTransparency = 0.55,
             CanvasSize = UDim2.new(0, 0, 0, 0),
             Visible = false,
+            Active = true,
             Parent = pages,
         })
-        padding(page, 4, 4, 12, 16)
-        local pageLayout = list(page, 12)
-        updateCanvas(page, pageLayout, 32)
+        padding(page, 6, 4, 12, 16)
+        local pageLayout = list(page, 10)
+        updateCanvas(page, pageLayout, 30)
 
         local pageApi = createPageApi(self, page)
         pageApi.Name = name
@@ -2080,33 +2721,51 @@ function Library:Window(props: { [string]: any })
             Name = "Toast",
             AnchorPoint = Vector2.new(1, 1),
             Position = UDim2.new(1, -16, 1, -16),
-            Size = UDim2.fromOffset(270, 68),
+            Size = UDim2.fromOffset(300, 72),
             BackgroundColor3 = self.Theme.Surface,
-            BackgroundTransparency = 0.05,
+            BackgroundTransparency = 0.1,
             BorderSizePixel = 0,
             ZIndex = 50,
             Parent = root,
         })
-        corner(toast, 12)
-        stroke(toast, toastProps.Color or self.Theme.Accent, 1, 0.25)
+        corner(toast, 10)
+        stroke(toast, self.Theme.StrokeSoft, 1, 0.6)
         padding(toast, 14, 10, 14, 10)
-        list(toast, 3)
 
-        createText(toast, "ToastTitle", tostring(toastProps.Title or "Notification"), 11.5, toastProps.Color or self.Theme.Text, true, 1)
-        createText(toast, "ToastDesc", tostring(toastProps.Desc or toastProps.Message or ""), 10, self.Theme.Muted, false, 2)
+        local accentLine = make("Frame", {
+            Name = "AccentLine",
+            AnchorPoint = Vector2.new(0, 0.5),
+            Position = UDim2.new(0, -10, 0.5, 0),
+            Size = UDim2.new(0, 3, 0.6, 0),
+            BackgroundColor3 = toastProps.Color or self.Theme.Accent,
+            BorderSizePixel = 0,
+            Parent = toast,
+        })
+        corner(accentLine, 2)
+
+        local toastContent = make("Frame", {
+            Name = "ToastContent",
+            Size = UDim2.fromScale(1, 1),
+            BackgroundTransparency = 1,
+            Parent = toast,
+        })
+        list(toastContent, 3)
+
+        createText(toastContent, "ToastTitle", tostring(toastProps.Title or "Notification"), 15, toastProps.Color or self.Theme.Text, true, 1)
+        createText(toastContent, "ToastDesc", tostring(toastProps.Desc or toastProps.Message or ""), 13, self.Theme.Muted, false, 2)
 
         toast.BackgroundTransparency = 1
-        toast.Position = UDim2.new(1, 300, 1, -16)
+        toast.Position = UDim2.new(1, 340, 1, -16)
         tween(toast, 0.25, {
-            BackgroundTransparency = 0.05,
+            BackgroundTransparency = 0.1,
             Position = UDim2.new(1, -16, 1, -16),
-        }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+        }, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
 
         task.delay(toastProps.Duration or 3, function()
             if toast.Parent then
                 tween(toast, 0.2, {
                     BackgroundTransparency = 1,
-                    Position = UDim2.new(1, 300, 1, -16),
+                    Position = UDim2.new(1, 340, 1, -16),
                 }, Enum.EasingStyle.Quart, Enum.EasingDirection.In)
                 task.wait(0.22)
                 if toast then toast:Destroy() end
@@ -2116,18 +2775,33 @@ function Library:Window(props: { [string]: any })
     end
 
     function self:SetVisible(val: boolean)
-        shadow.Visible = val
+        if val then
+            animateOpen()
+        else
+            animateClose(false)
+        end
     end
 
     function self:Destroy()
+        if animConn then
+            animConn:Disconnect()
+            animConn = nil
+        end
         screenGui:Destroy()
     end
 
     UserInputService.InputBegan:Connect(function(input, processed)
         if processed then return end
         if input.KeyCode == self.Keybind then
-            shadow.Visible = not shadow.Visible
+            toggleVisibility()
         end
+    end)
+
+    clampWindowPosition(shadow, uiScale)
+
+    -- Smooth entrance animation on startup
+    task.spawn(function()
+        animateOpen()
     end)
 
     return self
