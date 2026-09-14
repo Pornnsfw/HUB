@@ -221,30 +221,58 @@ return {
     },
 
 	CrateConfigs = {
-        Lose = {
-            Level = 15,
-            Mode = "Molten",
-            Towers = {},
-            Golden = {},
-            SkillTree = {},
-            Maps = {"Lay By", "Simplicity"},
-            Scripts = {
-                ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
-                ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+        Coins = {
+            Lose = {
+                Level = 15,
+                Mode = "Molten",
+                Towers = {"Assassin", "Soldier"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Lay By", "Simplicity"},
+                Scripts = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+                },
+            },
+            Win = {
+                Level = 175,
+                Mode = "Fallen",
+                Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Lay By", "Simplicity"},
+                Scripts = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                },
             },
         },
-        Win = {
-            Level = 175,
-            Mode = "Fallen",
-            Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
-            Golden = {},
-            SkillTree = {},
-            Maps = {"Lay By", "Simplicity"},
-            Scripts = {
-                ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
-                ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+        Gems = {
+            Lose = {
+                Level = 15,
+                Mode = "hardcore",
+                Towers = {},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Lay By", "Simplicity"},
+                Scripts = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+                },
+            },
+            Win = {
+                Level = 175,
+                Mode = "hardcore",
+                Towers = {"Gatling Gun", "Trapper", "Medic", "Mercenary Base", "DJ Booth"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Lay By", "Simplicity"},
+                Scripts = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                },
             },
         },
-    }
+    },
 	
 }
