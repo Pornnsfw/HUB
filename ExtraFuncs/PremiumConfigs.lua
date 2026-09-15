@@ -172,9 +172,8 @@ return {
         Towers = {"Gatling Gun", "Trapper", "Medic", "DJ Booth", "Mercenary Base"},
         Golden = {},
         SkillTree = {},
-        Maps = {"Simplicity", "Lay By"},
+        Maps = { "Lay By"},
         Scripts = {
-            ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/SimplicityLose.lua",
 		    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/MoltenLayby.lua",
         },
     },
@@ -193,10 +192,9 @@ return {
         Towers = {"Gatling Gun", "Trapper", "Medic", "DJ Booth", "Mercenary Base"},
         Golden = {},
         SkillTree = {},
-        Maps = {"Lay By", "Simplicity"},
+        Maps = {"Lay By"},
         Scripts = {
             ["Lay By"] = "https://raw.githubusercontent.com/AmonguszzZ/ModdedAether/refs/heads/main/Strats/Mode.lua",
-            ["Simplicity"] = "https://raw.githubusercontent.com/AmonguszzZ/ModdedAether/refs/heads/main/Strats/Mode.lua",
         },
     },
 },
