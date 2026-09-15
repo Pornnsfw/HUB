@@ -1,5 +1,4 @@
 
-TDS:Mode("Fallen")
 TDS:GameInfo("Lay By", {HiddenEnemies = true, Glass = true, Fog = true, Limitation = true, Committed = true, Quarantine = true, ExplodingEnemies = true})
 
 TDS:Place("Trapper", 3.009777069091797, 262.99998474121094, 223.56680297851562)
