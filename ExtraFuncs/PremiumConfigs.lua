@@ -271,5 +271,48 @@ return {
             },
         },
     },
+
+
+	 AutoEvoConfigs = {
+        Coins = {
+            Lose = {
+                Level = 50,
+                Mode = "Molten",
+                Towers = {"Assassin", "Soldier"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Simplicity", "Winter Abyss"},
+                Scripts = {
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
+                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                },
+            },
+            Win = {
+                Level = 50,
+                Mode = "Fallen",
+                Towers = {"Gatling Gun", "Trapper", "Medic"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Simplicity"},
+                Scripts = {
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                },
+            },
+        },
+        Gems = {
+            Lose = {
+                Level = 50,
+                Mode = "hardcore",
+                Towers = {"Farm", "Boomerang", "Crook Boss"},
+                Golden = {},
+                SkillTree = {},
+                Maps = {"Wretched Front"},
+                Scripts = {
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
+                },
+            }
+            -- (No "Win" needed for Gems, the script automatically forces "Lose" if they need Gems)
+        }
+    }
 	
 }
