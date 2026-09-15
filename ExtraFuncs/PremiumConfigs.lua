@@ -229,10 +229,10 @@ return {
                 Towers = {"Assassin", "Soldier"},
                 Golden = {},
                 SkillTree = {},
-                Maps = {"Lay By", "Simplicity"},
+                Maps = {"Simplicity", "Winter Abyss"},
                 Scripts = {
-                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/LayByLose.lua",
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
+					["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
                 },
             },
             Win = {
