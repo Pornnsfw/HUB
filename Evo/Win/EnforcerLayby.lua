@@ -1,4 +1,4 @@
-TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Shotgunner", "None")
+TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Shotgunner", "EvolvedEncforcer")
 TDS:GameInfo("Lay By", {HiddenEnemies = true, Committed = true, SpeedyEnemies = true, Limitation = true, Quarantine = true, ExplodingEnemies = true, Fog = true})
 
 TDS:Place("Trapper", 3.651508331298828, 263, 207.24977111816406)
