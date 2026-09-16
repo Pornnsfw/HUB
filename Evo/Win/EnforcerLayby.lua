@@ -1,3 +1,8 @@
+local Globals = getgenv()
+Globals.AutoGatling = true
+Globals.AutoRejoin = true
+Globals.AutoMercenary = true
+
 TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Shotgunner", "EvolvedEncforcer")
 TDS:GameInfo("Lay By", {HiddenEnemies = true, Committed = true, SpeedyEnemies = true, Limitation = true, Quarantine = true, ExplodingEnemies = true, Fog = true})
 
