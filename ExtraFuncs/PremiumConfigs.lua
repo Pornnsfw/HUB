@@ -280,7 +280,7 @@ return {
             Mode = "Molten",
             Golden = {},
             SkillTree = {},
-            Maps = {"Simplicity", "Winter Abyss"},
+            Maps = {"Simplicity"},
             
             -- You can now customize the Towers for each specific Evo target!
             Towers = {
@@ -293,20 +293,16 @@ return {
             -- Dynamic scripts based on the active tower you are farming
             Scripts = {
                 ["Scout"] = {
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
-                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Lose/OperatorLose.lua",
                 },
                 ["Shotgunner"] = {
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
-                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Lose/EnforcerLose.lua",
                 },
                 ["Crook Boss"] = {
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
-                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Lose/KingpinLose.lua",
                 },
                 ["Minigunner"] = {
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
-                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Lose/JuggernautLose.lua",
                 }
             }
         },
