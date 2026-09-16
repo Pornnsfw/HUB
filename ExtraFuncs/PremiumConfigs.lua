@@ -273,45 +273,97 @@ return {
     },
 
 
-	 AutoEvoConfigs = {
-        Coins = {
-            Lose = {
-                Level = 50,
-                Mode = "Molten",
-                Towers = {"Assassin", "Soldier"},
-                Golden = {},
-                SkillTree = {},
-                Maps = {"Simplicity", "Winter Abyss"},
-                Scripts = {
+	   Coins = {
+        Lose = {
+            Level = 50,
+            Mode = "Molten",
+            Golden = {},
+            SkillTree = {},
+            Maps = {"Simplicity", "Winter Abyss"},
+            
+            -- You can now customize the Towers for each specific Evo target!
+            Towers = {
+                ["Scout"] = {"Assassin", "Soldier"},
+                ["Shotgunner"] = {"Assassin", "Soldier"},
+                ["Crook Boss"] = {"Assassin", "Soldier"},
+                ["Minigunner"] = {"Assassin", "Soldier"}
+            },
+            
+            -- Dynamic scripts based on the active tower you are farming
+            Scripts = {
+                ["Scout"] = {
                     ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
                     ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
                 },
-            },
-            Win = {
-                Level = 50,
-                Mode = "Fallen",
-                Towers = {"Gatling Gun", "Trapper", "Medic"},
-                Golden = {},
-                SkillTree = {},
-                Maps = {"Simplicity"},
-                Scripts = {
-                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/WinStrat/FallenLayby.lua",
+                ["Shotgunner"] = {
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
+                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
                 },
-            },
+                ["Crook Boss"] = {
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
+                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                },
+                ["Minigunner"] = {
+                    ["Simplicity"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/SimplicityLose.lua",
+                    ["Winter Abyss"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/WinterAbyssLose.lua",
+                }
+            }
         },
-        Gems = {
-            Lose = {
-                Level = 50,
-                Mode = "hardcore",
-                Towers = {"Farm", "Boomerang", "Crook Boss"},
-                Golden = {},
-                SkillTree = {},
-                Maps = {"Wretched Front"},
-                Scripts = {
+        Win = {
+            Level = 50,
+            Mode = "Fallen",
+            Golden = {},
+            SkillTree = {},
+            Maps = {"Lay By"},
+            Towers = {
+                ["Scout"] = {"Gatling Gun", "Trapper", "Hacker"},
+                ["Shotgunner"] = {"Gatling Gun", "Trapper", "Hacker"},
+                ["Crook Boss"] = {"Gatling Gun", "Trapper", "Hacker"},
+                ["Minigunner"] = {"Gatling Gun", "Trapper", "Hacker"}
+            },
+            Scripts = {
+                ["Scout"] = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Win/OperatorLayby.lua",
+                },
+                ["Shotgunner"] = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Win/EnforcerLayby.lua",
+                },
+                ["Crook Boss"] = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Win/KingpinLayby.lua",
+                },
+                ["Minigunner"] = {
+                    ["Lay By"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/Evo/Win/JuggernautLayby.lua",
+                }
+            }
+        },
+    },
+    Gems = {
+        Lose = {
+            Level = 50,
+            Mode = "hardcore",
+            Golden = {},
+            SkillTree = {},
+            Maps = {"Wretched Front"},
+            Towers = {
+                ["Scout"] = {"Farm", "Boomerang", "Crook Boss"},
+                ["Shotgunner"] = {"Farm", "Boomerang", "Crook Boss"},
+                ["Crook Boss"] = {"Farm", "Boomerang", "Crook Boss"},
+                ["Minigunner"] = {"Farm", "Boomerang", "Crook Boss"}
+            },
+            Scripts = {
+                ["Scout"] = {
                     ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
                 },
+                ["Shotgunner"] = {
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
+                },
+                ["Crook Boss"] = {
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
+                },
+                ["Minigunner"] = {
+                    ["Wretched Front"] = "https://raw.githubusercontent.com/Pornnsfw/HUB/refs/heads/main/LoseStrat%20/%5BGems%5DLose.lua",
+                }
             }
-            -- (No "Win" needed for Gems, the script automatically forces "Lose" if they need Gems)
         }
     }
 	
