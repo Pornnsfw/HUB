@@ -1,3 +1,4 @@
+
 --!strict
 -- AutoTrialsRequirements.lua
 -- Static trial/fallback requirements and strategy script URLs.
@@ -272,7 +273,7 @@ return {
         },
     },
 
-	Requirements.AutoEvoConfigs = {
+	AutoEvoConfigs = {
 	   Coins = {
         Lose = {
             Level = 50,
@@ -366,6 +367,4 @@ return {
             }
         }
     }
-	}
-	
 }
