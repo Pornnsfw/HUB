@@ -1,6 +1,6 @@
 local Globals = getgenv()
 Globals.AutoSkip = true
-TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Minigunner", "EvolvedJuggernaut")
+TDS:Loadout("Assassin", "Soldier", "", "Minigunner", "EvolvedJuggernaut")
 
 TDS:RemoveIndex()
 TDS:Place("Assassin", -20.472789764404297, 22.99998474121094, -12.017228126525879)
