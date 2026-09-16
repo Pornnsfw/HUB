@@ -272,7 +272,7 @@ return {
         },
     },
 
-
+	Requirements.AutoEvoConfigs = {
 	   Coins = {
         Lose = {
             Level = 50,
@@ -366,5 +366,6 @@ return {
             }
         }
     }
+	}
 	
 }
