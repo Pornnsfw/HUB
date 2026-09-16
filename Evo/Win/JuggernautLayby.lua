@@ -3,8 +3,8 @@ Globals.AutoGatling = true
 Globals.AutoRejoin = true
 Globals.AutoMercenary = true
 
-TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Minigunner", "EvolvedJuggernaut")
 TDS:GameInfo("Lay By", {HiddenEnemies = true, Committed = true, SpeedyEnemies = true, Limitation = true, Quarantine = true, ExplodingEnemies = true, Fog = true})
+TDS:Loadout("Trapper", "Gatling Gun", "Hacker", "Minigunner", "EvolvedJuggernaut")
 
 TDS:Place("Trapper", 3.651508331298828, 263, 207.24977111816406)
 TDS:Ready()
